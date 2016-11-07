@@ -1,0 +1,115 @@
+package org.ebayopensource.winder.quartz;
+
+import org.ebayopensource.winder.*;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+
+import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
+
+/**
+ * @author Sheldon Shao xshao@ebay.com on 10/12/16.
+ * @version 1.0
+ */
+@PersistJobDataAfterExecution
+public class QuartzJob implements Job {
+
+    private static Logger log = LoggerFactory.getLogger(QuartzJob.class);
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        // Get job data for job... this is the stateful one, we're ignoring data in trigger
+        JobDetail quartzJobDetail = context.getJobDetail();
+        JobDataMap runtimeMap = quartzJobDetail.getJobDataMap();
+
+        WinderEngine engine = QuartzEngine.getInstance();
+        QuartzJobContext ctx = new QuartzJobContext(engine, context);
+        WinderJobDetail runtimeDetail = ctx.getJobDetail();
+        String className = runtimeMap.getString(KEY_JOBCLASS);
+
+        WinderJob job = null;
+        Runnable runnable = null;
+        try {
+            if (className == null) {
+                throw new IllegalArgumentException("Missing job class name");
+            }
+
+            Class clazz = Class.forName(className);
+            if (Step.class.isAssignableFrom(clazz)) { //Multiple steps
+                job = new WinderStair(engine, clazz);
+            }
+            else if (Runnable.class.isAssignableFrom(clazz)) {
+                runnable = (Runnable)clazz.newInstance();
+                if (runnable instanceof WinderEngineAware) {
+                    ((WinderEngineAware)runnable).setWinderEngine(engine);
+                }
+            }
+            else {
+                throw new IllegalStateException("Unsupported job class:" + className);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Creating job exception", e);
+            }
+            JobExecutionException ex = new JobExecutionException("unable to create job object",e);
+            ex.setUnscheduleAllTriggers(true); // don't try this one again
+            ctx.setError();
+            ctx.setStatusMessage("Creating job exception", e);
+            throw ex;
+        }
+
+        if (!runtimeMap.containsKey(KEY_JOBSTARTDATE)) {
+            String startDateStr = engine.formatDate(new Date());
+            runtimeMap.put(KEY_JOBSTARTDATE, startDateStr);
+        }
+
+        if ( StatusEnum.CANCEL_IN_PROGRESS != ctx.getJobStatus() &&
+                StatusEnum.EXECUTING != ctx.getJobStatus() ) {
+            ctx.setJobStatus(StatusEnum.EXECUTING);
+        }
+
+        // Execute the job
+        try {
+            if (job != null) {
+                job.execute(ctx);
+            }
+            else if (runnable != null) {
+                runnable.run();
+            }
+        } catch (WinderException je) {
+            JobExecutionException ex = new JobExecutionException("exception running job",je);
+            ex.setUnscheduleAllTriggers(true); // don't try this one again
+            ctx.setError();
+            ctx.setStatusMessage("Executing job exception", je);
+            throw ex;
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Executing job exception", e);
+            }
+            JobExecutionException ex = new JobExecutionException("Unexpected exeception running job", e);
+            ex.setUnscheduleAllTriggers(true); // don't try this one again
+            ctx.setError();
+            ctx.setStatusMessage("Executing job unknown exception", e);
+            throw ex;
+        }
+
+        if (job != null) {
+            StatusEnum executionResultStatus = ctx.getJobStatus();
+
+            if (!executionResultStatus.isDone()) { // Merge the status from DB and
+                WinderJobDetailMerger merger = engine.getJobDetailMerger();
+
+                try {
+                    WinderJobDetail dbDetail = engine.getSchedulerManager().getJobDetail(runtimeDetail.getJobId());
+                    merger.merge(dbDetail, runtimeDetail);
+                } catch (Exception e) {
+                    // KEEPME
+                    // fail to look up, should not happen, leave the status along
+                    log.error("Finishing job exception", e);
+                }
+            }
+        }
+    }
+}
