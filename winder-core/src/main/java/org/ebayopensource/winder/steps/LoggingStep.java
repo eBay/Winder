@@ -44,7 +44,7 @@ public class LoggingStep <TI extends TaskInput, TR extends TaskResult, C extends
     }
 
     @Override
-    public void process(C ctx) throws Exception {
+    public void execute(C ctx) throws Exception {
         Logger log = LoggerFactory.getLogger(ctx.getClass());
 
         if (log.isDebugEnabled()) {
@@ -53,7 +53,7 @@ public class LoggingStep <TI extends TaskInput, TR extends TaskResult, C extends
                     ctx.getJobIdAsString(), ctx.getGroupId(), this.name()));
         }
 
-        step.process(ctx);
+        step.execute(ctx);
 
         if (log.isDebugEnabled()) {
             log.debug(String.format(

@@ -108,7 +108,7 @@ public class WinderStepRegistry implements StepRegistry {
             for(Method method :methods) {
                 Class[] paramTypes = method.getParameterTypes();
                 if (paramTypes.length == 1) {
-                    if ("process".equals(method.getName())) {
+                    if ("execute".equals(method.getName())) {
                         if (TaskContext.class.isAssignableFrom(paramTypes[0])) {
 
                             orig = addMoreSteps(orig);

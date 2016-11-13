@@ -103,7 +103,7 @@ public class TimelineStep<TI extends TaskInput, TR extends TaskResult, C extends
     }
 
     @Override
-    public void process(C context) throws Exception {
+    public void execute(C context) throws Exception {
         if (isBefore || isAround) {
             if (log.isDebugEnabled()) {
                 log.debug("Start Timeline Step: " + timelineStep);
@@ -113,7 +113,7 @@ public class TimelineStep<TI extends TaskInput, TR extends TaskResult, C extends
                     timeline.groupStart(), timeline.groupEnd(), timeline.label(), timeline.description());
         }
 
-        super.process(context);
+        super.execute(context);
 
         if (isAfter || isAround) {
             if (log.isDebugEnabled()) {

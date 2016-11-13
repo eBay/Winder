@@ -27,6 +27,7 @@ package org.ebayopensource.winder.examples;
 import org.ebayopensource.winder.WinderEngine;
 import org.ebayopensource.winder.quartz.QuartzEngine;
 import org.ebayopensource.winder.quartz.QuartzEngineInitializer;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,16 +39,24 @@ import org.junit.Test;
  */
 public class SimpleJobTest {
 
+    private static WinderEngine engine;
+
     @BeforeClass
     public static void init() {
-        QuartzEngineInitializer.init();
+        engine = QuartzEngineInitializer.init();
+        engine.start();
     }
 
     @Test
     public void testJob() throws Exception {
-        WinderEngine engine = QuartzEngine.getInstance();
         engine.scheduleJob(SimpleJob.class);
-
         Thread.sleep(20000);
+    }
+
+    @AfterClass
+    public static void stop() {
+        if (engine != null) {
+            engine.stop();
+        }
     }
 }

@@ -119,7 +119,12 @@ public class WinderStair implements WinderJob {
 
                 stepCount ++;
 
-                ctx.updateJobData();
+                try {
+                    ctx.updateJobData();
+                }
+                catch(WinderException we) {
+                    log.error(jobType + " Update the status of job db error", we);
+                }
             }
         }
         else {
@@ -140,7 +145,7 @@ public class WinderStair implements WinderJob {
             if (updates != null && updates.size() >= maxSteps) {
                 throw new WinderJobException("Winder stair max stages (" + maxSteps + ") exceeded. Runaway job terminated.");
             }
-            currentStep.process(stepContext);
+            currentStep.execute(stepContext);
             return true;
         } catch (final Exception e) {
             log.error(jobType + " unexpected exception occurred", e);

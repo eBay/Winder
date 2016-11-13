@@ -42,7 +42,7 @@ public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInp
 
     STEP1(10) {
         @Override
-        public void process(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
             System.out.println("STEP1");
             String step2 = context.getTaskInput().getString("next_step", "STEP2");
             SimpleJob nextStep = SimpleJob.valueOf(step2);
@@ -52,7 +52,7 @@ public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInp
 
     STEP2(20) {
         @Override
-        public void process(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
             System.out.println("STEP2");
             context.setCurrentStep(STEP3);
         }
@@ -60,7 +60,7 @@ public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInp
 
     STEP3(30) {
         @Override
-        public void process(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
             System.out.println("STEP3");
             context.setCurrentStep(DONE);
         }
@@ -68,13 +68,13 @@ public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInp
 
     ERROR(40) {
         @Override
-        public void process(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
             System.out.println("ERROR");
         }
     },
     DONE(50) {
         @Override
-        public void process(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
             System.out.println("DONE!");
         }
     };

@@ -26,7 +26,6 @@ package org.ebayopensource.winder.quartz;
 
 import org.ebayopensource.winder.WinderConfiguration;
 import org.ebayopensource.winder.WinderEngine;
-import org.ebayopensource.winder.WinderException;
 import org.quartz.Scheduler;
 import org.quartz.impl.DefaultThreadExecutor;
 import org.quartz.impl.DirectSchedulerFactory;

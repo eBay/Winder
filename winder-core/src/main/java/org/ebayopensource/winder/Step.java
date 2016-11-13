@@ -35,5 +35,5 @@ public interface Step<TI extends TaskInput, TR extends TaskResult, C extends Tas
 
     int code();
 
-    void process(C context) throws Exception;
+    void execute(C context) throws Exception;
 }

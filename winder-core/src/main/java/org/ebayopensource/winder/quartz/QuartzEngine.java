@@ -52,7 +52,7 @@ public class QuartzEngine implements WinderEngine {
 
     private WinderConfiguration configuration;
 
-    private WinderSchedulerManager schedulerManager;
+    private QuartzSchedulerManager schedulerManager;
 
     private WinderJobDetailFactory jobDetailFactory;
 
@@ -168,20 +168,26 @@ public class QuartzEngine implements WinderEngine {
         return stepRegistry;
     }
 
+    @Override
+    public void start() {
+        if (schedulerManager != null) {
+            schedulerManager.start();
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (schedulerManager != null) {
+            schedulerManager.stop();
+        }
+    }
+
     public void setClusterName(String clusterName) {
         this.clusterName = clusterName;
     }
 
     public void setConfiguration(WinderConfiguration configuration) {
         this.configuration = configuration;
-    }
-
-    public void setSchedulerManager(WinderSchedulerManager schedulerManager) {
-        this.schedulerManager = schedulerManager;
-    }
-
-    public void setJobDetailFactory(WinderJobDetailFactory jobDetailFactory) {
-        this.jobDetailFactory = jobDetailFactory;
     }
 
     public void setJobDetailMerger(QuartzJobDetailMerger jobDetailMerger) {

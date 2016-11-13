@@ -84,5 +84,5 @@ public interface WinderJobContext {
 
     WinderJobDetail getJobDetail();
 
-    void updateJobData();
+    void updateJobData() throws WinderException;
 }

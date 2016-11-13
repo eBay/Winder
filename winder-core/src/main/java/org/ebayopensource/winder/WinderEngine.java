@@ -116,4 +116,9 @@ public interface WinderEngine {
      * @return
      */
     StepRegistry getStepRegistry();
+
+
+    void start();
+
+    void stop();
 }

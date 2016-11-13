@@ -205,7 +205,7 @@ public class QuartzJobContext implements WinderJobContext {
 //        return jobDetail.getKey();
 //    }
 
-    public void updateJobData() {
+    public void updateJobData() throws WinderException{
         scheduler.updateJobData(jobDetail);
     }
 }

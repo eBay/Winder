@@ -502,4 +502,24 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         }
         updateJobDetail(d);
     }
+
+    public void start() {
+        if (quartzScheduler != null) {
+            try {
+                quartzScheduler.start();
+            } catch (SchedulerException e) {
+                log.warn("Starting quartz exception", e);
+            }
+        }
+    }
+
+    public void stop() {
+        if (quartzScheduler != null) {
+            try {
+                quartzScheduler.shutdown(true);
+            } catch (SchedulerException e) {
+                log.warn("Stopping quartz exception", e);
+            }
+        }
+    }
 }

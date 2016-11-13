@@ -54,7 +54,7 @@ public class StepWrapper <TI extends TaskInput, TR extends TaskResult, C extends
     }
 
     @Override
-    public void process(C context) throws Exception {
-        step.process(context);
+    public void execute(C context) throws Exception {
+        step.execute(context);
     }
 }
