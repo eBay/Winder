@@ -47,7 +47,7 @@ public interface WinderSchedulerManager<TI extends TaskInput> {
     void unscheduleJob(JobId jobId) throws WinderScheduleException;
 
     // Update the JOB_ID field if using SQL for fast search of jobs xxx
-    void updateJobData(WinderJobDetail job);
+    void updateJobData(WinderJobDetail job) throws WinderScheduleException;
 
     JobId scheduleChildJob(TI input, WinderJobContext parentJobCtx) throws WinderScheduleException;
 

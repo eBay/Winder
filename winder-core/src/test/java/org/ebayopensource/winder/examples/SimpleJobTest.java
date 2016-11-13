@@ -48,6 +48,6 @@ public class SimpleJobTest {
         WinderEngine engine = QuartzEngine.getInstance();
         engine.scheduleJob(SimpleJob.class);
 
-        Thread.sleep(60000);
+        Thread.sleep(20000);
     }
 }

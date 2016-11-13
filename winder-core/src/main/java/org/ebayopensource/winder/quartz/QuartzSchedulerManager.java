@@ -41,6 +41,8 @@ import static org.ebayopensource.winder.StatusEnum.SUBMITTED;
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
 /**
+ * Schedule Manager
+ *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
  */
@@ -131,8 +133,12 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
     }
 
     @Override
-    public void updateJobData(WinderJobDetail job) {
-
+    public void updateJobData(WinderJobDetail job) throws WinderScheduleException{
+        try {
+            quartzScheduler.addJob((JobDetail)job, true);
+        } catch (SchedulerException e) {
+            throw new WinderScheduleException("Change job data exception", e);
+        }
     }
 
     @Override

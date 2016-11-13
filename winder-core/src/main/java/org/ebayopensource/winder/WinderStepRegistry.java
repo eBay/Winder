@@ -152,7 +152,7 @@ public class WinderStepRegistry implements StepRegistry {
 
     @Override
     public String getJobType(Class<? extends Step> clazz) {
-        return null;
+        return clazz.getSimpleName();
     }
 
     protected Step addMoreSteps(Step step) {
