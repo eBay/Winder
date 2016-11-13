@@ -38,7 +38,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.ebayopensource.common.util.Parameters;
+import org.ebayopensource.common.util.ParametersDeserializer;
 import org.ebayopensource.common.util.ParametersMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +57,16 @@ public class JsonUtil {
 
     //Object Mapper is thread safe
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapperForWriting = new ObjectMapper();
 
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        SimpleModule moduleMap = new SimpleModule();
+        moduleMap.addDeserializer(Parameters.class, new ParametersDeserializer());
+        objectMapper.registerModule(moduleMap);
+
+        objectMapperForWriting.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
     }
 
     public static ObjectMapper getObjectMapper() {

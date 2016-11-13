@@ -26,6 +26,7 @@ package org.ebayopensource.common.util;
 
 
 import java.util.AbstractMap;
+import java.util.Map;
 
 /**
  * Abstract Task Parameters
@@ -111,6 +112,15 @@ public abstract class AbstractParameters<V> extends AbstractMap<String, V>
         }
         else {
             return new Object[]{obj};
+        }
+    }
+
+    public static <V> Parameters<V> toParameters(Map value) {
+        if (value instanceof Parameters) {
+            return (Parameters)value;
+        }
+        else {
+            return new ParametersMap<>(value);
         }
     }
 }
