@@ -50,6 +50,6 @@ public class WinderTaskInputTest {
         input.getJobStartTime();
         input.setJobStartTime(new Date());
         input.put("test", "abc");
-        assertEquals("{\"test\":\"abc\"}", input.toJson());
+        assertTrue(input.toJson().contains("\"test\":\"abc\""));
     }
 }

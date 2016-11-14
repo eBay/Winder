@@ -24,7 +24,9 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ebayopensource.winder.*;
+import org.ebayopensource.winder.metadata.JobMetadata;
 import org.ebayopensource.winder.util.Guid;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -63,17 +65,12 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
 
         Date createDate = new Date();
         String jobName = jobType + "." + guid.nextPaddedGUID();
-        String groupName = engine.formatShortDate(createDate);
-
-        JobDataMap map = new JobDataMap();
-        String jobInput = input.toJson();
-
-        String createDateStr = engine.formatDate(createDate);
 
         String firstStep = "-1";
+        JobMetadata metadata = null;
         if (Step.class.isAssignableFrom(clazz)) {
             //Make sure it was registered
-            engine.getStepRegistry().register(clazz);
+            metadata = engine.getStepRegistry().register(clazz);
             firstStep = "-1";
         }
         else if (Runnable.class.isAssignableFrom(clazz)) {
@@ -82,6 +79,26 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
         else {
             throw new IllegalStateException("Unsupported job type:" + clazz.getName());
         }
+
+        /*
+         * Group name priority:
+         *
+         * taskInput.group > @Job.group > winder default group name("formatted date")
+         */
+        String groupName = input.getJobGroup();
+        if (StringUtils.isBlank(groupName)) {
+            if (metadata != null) {
+                groupName = metadata.getJobGroup();
+                if (StringUtils.isBlank(groupName)) {
+                    groupName = engine.formatShortDate(createDate);
+                }
+            }
+        }
+
+        JobDataMap map = new JobDataMap();
+        String jobInput = input.toJson();
+
+        String createDateStr = engine.formatDate(createDate);
 
         map.put(KEY_JOBCREATEDATE, createDateStr);
         map.put(KEY_JOBINPUT, jobInput);

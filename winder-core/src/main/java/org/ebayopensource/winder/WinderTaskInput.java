@@ -43,6 +43,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     private Class jobClass;
     private String jobType;
+    private String jobGroup;
     private String jobCategory ="default";
     private String jobOwner = "unknownUser";
     private int stepInterval = 10;
@@ -146,5 +147,13 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setJobClass(Class jobClass) {
         this.jobClass = jobClass;
+    }
+
+    public String getJobGroup() {
+        return jobGroup;
+    }
+
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
     }
 }

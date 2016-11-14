@@ -41,7 +41,19 @@ public @interface Job {
     /**
      * Job type, if it is blank, use class simple name instead
      *
-     * @return
+     * @return Job Type
      */
     String type() default "";
+
+    /**
+     * Group name
+     *
+     * Which group name will be use ?
+     *
+     * Priority:
+     * taskInput.group > @Job.group > winder default group name("formatted date")
+     *
+     * @return Group Name
+     */
+    String group() default "";
 }

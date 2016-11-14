@@ -35,8 +35,6 @@ import org.ebayopensource.winder.metadata.StepMetadata;
  */
 public interface TaskContext<TI extends TaskInput, TR extends TaskResult> {
 
-//    <C extends TaskContext> Step<C> getCurrentStep(Class<? extends Step> clazz, Step firstStep);
-
     void setCurrentStep(Step<TI, TR, ? extends TaskContext> step);
 
     Step<TI, TR, ? extends TaskContext> getCurrentStep();
@@ -82,13 +80,14 @@ public interface TaskContext<TI extends TaskInput, TR extends TaskResult> {
     /**
      * Return JobId
      *
-     * @return
+     * @return JobId
      */
     JobId getJobId();
 
     /**
      * Return JobId in string.
-     * @return
+     *
+     * @return JobId as String
      */
     String getJobIdAsString();
 
@@ -104,8 +103,9 @@ public interface TaskContext<TI extends TaskInput, TR extends TaskResult> {
     StepMetadata getStepMetadata();
 
     /**
+     * Job Metadata
      *
-     * @return
+     * @return Job Metadata
      */
     JobMetadata getJobMetadata();
 }

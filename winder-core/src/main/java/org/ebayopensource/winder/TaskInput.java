@@ -50,6 +50,15 @@ public interface TaskInput extends Parameters<Object> {
      */
     String getJobType();
 
+
+    /**
+     * Job group, it is same as the group in JobId,
+     * If no group specified, winder uses formatted date as group.
+     *
+     * @return Job group, it is same as the group in JobId
+     */
+    String getJobGroup();
+
     /**
      * A category for querying the jobs
      *

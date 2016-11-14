@@ -41,4 +41,10 @@ public class QuartzEngineInitializer {
         }
         return QuartzEngine.getInstance();
     }
+
+    public static WinderEngine start() {
+        WinderEngine engine = init();
+        engine.start();
+        return engine;
+    }
 }

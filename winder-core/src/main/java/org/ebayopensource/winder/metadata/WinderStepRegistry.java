@@ -149,7 +149,12 @@ public class WinderStepRegistry implements StepRegistry {
 
         Job jobDesc = clazz.getAnnotation(Job.class);
         if (jobDesc != null) {
-            jobMetadata.setJobType(jobDesc.type());
+            if (jobDesc.type().length() > 0) {
+                jobMetadata.setJobType(jobDesc.type());
+            }
+            if (jobDesc.group().length() > 0) {
+                jobMetadata.setJobGroup(jobDesc.group());
+            }
         }
 
         StepMetadata stepMetadata = jobMetadata.getErrorStep();

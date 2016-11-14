@@ -24,24 +24,74 @@
  */
 package org.ebayopensource.winder.anno;
 
-import org.ebayopensource.winder.StatusEnum;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to indicate the step is an final error handling.
- * It will try to get the ERROR step by name "ERROR" first,
- *    if there is no error step specified.
+ * Cron table style
+ *
+ * http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html
+ *
+ * Format
+ *
+ * A cron expression is a string comprised of 6 or 7 fields separated by white space.
+ * Fields can contain any of the allowed values, along with various combinations of the allowed special characters for that field.
+ *
+ * The fields are as follows:
+ *
+ * Field Name	Mandatory	Allowed Values	Allowed Special Characters
+ * Seconds	    NO	0-59	, - * /
+ * Minutes	    NO	0-59	, - * /
+ * Hours	    NO	0-23	, - * /
+ * Day of month	NO	1-31	, - * ? / L W
+ * Month	    YES	1-12 or JAN-DEC	, - * /
+ * Day of week	YES	1-7 or SUN-SAT	, - * ? / L #
+ * Year	NO	empty, 1970-2099	, - * /
+ *
+ * So cron expressions can be as simple as this: * * * * ? *
+ * or more complex, like this: 0/5 14,18,3-39,52 * ? JAN,MAR,SEP MON-FRI 2002-2010
  *
  * @author Sheldon Shao xshao@ebay.com on 11/13/16.
  * @version 1.0
  */
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ErrorStep {
+public @interface Cron {
 
-    StatusEnum value() default StatusEnum.ERROR;
+    /**
+     * Seconds
+     */
+    String seconds() default "0";
+
+    /**
+     * Minutes
+     */
+    String minutes() default "*";
+
+    /**
+     * Hours
+     */
+    String hours() default "*";
+
+    /**
+     * Day of Month
+     */
+    String dayOfMonth() default "*";
+
+    /**
+     * Month
+     */
+    String month() default "*";
+
+    /**
+     * Day of Week
+     */
+    String dayOfWeek() default "*";
+
+    /**
+     * Year
+     */
+    String year() default "*";
 }

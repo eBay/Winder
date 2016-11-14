@@ -46,11 +46,7 @@ public interface TaskStatusData {
 
     String getName();
 
-//    void setName(String type);
-
     Date getDateCreated();
-
-//    void setDateCreated(Date created);
 
     Date getStartTime();
 

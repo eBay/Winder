@@ -56,6 +56,8 @@ public class QuartzEngine implements WinderEngine {
 
     private QuartzSchedulerManager schedulerManager;
 
+    private boolean started = false;
+
     private WinderJobDetailFactory jobDetailFactory;
 
     private QuartzJobDetailMerger jobDetailMerger = new QuartzJobDetailMerger();
@@ -171,15 +173,16 @@ public class QuartzEngine implements WinderEngine {
     }
 
     @Override
-    public void start() {
-        if (schedulerManager != null) {
+    public synchronized void start() {
+        if (schedulerManager != null && !started) {
             schedulerManager.start();
+            started = true;
         }
     }
 
     @Override
-    public void stop() {
-        if (schedulerManager != null) {
+    public synchronized void stop() {
+        if (schedulerManager != null && started) {
             schedulerManager.stop();
         }
     }
