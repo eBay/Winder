@@ -30,6 +30,7 @@ import java.io.StringWriter;
 import java.util.Date;
 
 import org.ebayopensource.winder.*;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.Trigger;
@@ -53,6 +54,11 @@ public class QuartzJobContext implements WinderJobContext {
 
     private WinderEngine winderEngine;
 
+    private int initStep = 0;
+    private int maxStep = 100000;
+
+    private final JobDataMap map;
+
     public QuartzJobContext(WinderEngine winderEngine, JobExecutionContext qctx) {
         this.winderEngine = winderEngine;
         this.scheduler = winderEngine.getSchedulerManager();
@@ -67,6 +73,12 @@ public class QuartzJobContext implements WinderJobContext {
         if (trigger == null) {
             throw new IllegalStateException("missing trigger");
         }
+
+        WinderConfiguration configuration = winderEngine.getConfiguration();
+        initStep = configuration.getInt("winder_steps_init_step", 0);
+        maxStep = configuration.getInt("winder_steps_max_step", 100000);
+
+        map = jobDetail.getJobDataMap();
     }
 
     public WinderJobDetail getJobDetail() {
@@ -88,12 +100,32 @@ public class QuartzJobContext implements WinderJobContext {
 
     @Override
     public int getJobStep() {
-        return 0;
+        String jobStep = map.getString(KEY_JOB_STEP);
+        if (jobStep == null) { //For eBay code backward compatible
+            jobStep = map.getString(KEY_JOBSTAGE);
+        }
+
+        int result = -1;
+        if (jobStep != null) {
+            try {
+                result = Integer.parseInt(jobStep);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("bad job step " + jobStep, e);
+            }
+            if (result != -1 && (result < initStep || result > maxStep)) {
+                throw new IllegalArgumentException("bad job step " + result);
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), result));
+            }
+        }
+        return result;
     }
 
     @Override
     public void setJobStep(int step) {
-
+        map.put(KEY_JOB_STEP, String.valueOf(step));
     }
 
 
@@ -127,7 +159,6 @@ public class QuartzJobContext implements WinderJobContext {
         }
     }
 
-
     public boolean isAwaitingForAction(boolean isAwaiting) {
         return jobDetail.getJobDataMap().getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
     }
@@ -136,20 +167,22 @@ public class QuartzJobContext implements WinderJobContext {
         jobDetail.getJobDataMap().put(KEY_JOB_IS_AWAITING_FOR_ACTION, isAwaiting);
     }
 
-    public void setComplete() {
-        markJobCompleteAndUnschedule(StatusEnum.COMPLETED);
-    }
+//    public void setComplete() {
+//        markJobCompleteAndUnschedule(StatusEnum.COMPLETED);
+//    }
 
     public void setError() {
-        markJobCompleteAndUnschedule(StatusEnum.ERROR);
+        done(StatusEnum.ERROR);
     }
 
-    public void setCompleteWithWarning() {
-        markJobCompleteAndUnschedule(StatusEnum.WARNING);
-    }
+//    public void setCompleteWithWarning() {
+//        done(StatusEnum.WARNING);
+//    }
 
-    private void markJobCompleteAndUnschedule(StatusEnum status) {
-        jobDetail.getJobDataMap().put(KEY_JOBSTATUS, String.valueOf(status));
+    public void done(StatusEnum status) {
+        if (status != StatusEnum.UNKNOWN) {
+            jobDetail.getJobDataMap().put(KEY_JOBSTATUS, String.valueOf(status));
+        }
         Date endDate = new Date();
         jobDetail.setEndDate(winderEngine.formatDate(endDate));
 

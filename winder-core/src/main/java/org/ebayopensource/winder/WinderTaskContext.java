@@ -26,8 +26,12 @@ package org.ebayopensource.winder;
 
 import org.ebayopensource.common.config.PropertyUtil;
 import org.ebayopensource.common.util.Parameters;
+import org.ebayopensource.winder.metadata.JobMetadata;
+import org.ebayopensource.winder.metadata.StepMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Winder Task Context
@@ -56,6 +60,10 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
 
     protected WinderJobDetail jobDetail;
 
+    private JobMetadata jobMetadata;
+
+    private StepMetadata stepMetadata;
+
     public WinderTaskContext(WinderJobContext jobContext, Class<? extends Step> jobClass) throws WinderScheduleException {
         this.jobClass = jobClass;
         this.jobContext = jobContext;
@@ -67,6 +75,8 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
     protected void init() throws WinderScheduleException {
         WinderSchedulerManager schedulerManager = engine.getSchedulerManager();
         jobDetail = schedulerManager.getJobDetail(jobContext.getJobId());
+
+        jobMetadata = engine.getStepRegistry().getMetadata(jobClass);
 
         taskInput = initInput(jobDetail.getInput());
         taskResult = initResult(jobDetail.getResult());
@@ -137,37 +147,47 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
         return taskResult;
     }
 
+    @Override
+    public StepMetadata getStepMetadata() {
+        return stepMetadata;
+    }
+
+    @Override
+    public JobMetadata getJobMetadata() {
+        return jobMetadata;
+    }
+
     public final void setCurrentStep(Step step) {
         if (log.isDebugEnabled()) {
             log.debug(String.format("Job {%s} status is: {%s} nextStep is {%s}", getJobId(),
                     getJobStatus(), step));
         }
+        stepMetadata = jobMetadata.getStep(step.code());
         jobContext.setJobStep(step.code());
     }
 
     @Override
     public Step<TI, TR, ? extends WinderTaskContext> getCurrentStep() {
-        Step step = engine.getStepRegistry().lookup(jobClass, jobContext.getJobStep());
-        if (step == null) {
-            step = engine.getStepRegistry().getFirstStep(jobClass);
-        }
+        int jobStep = jobContext.getJobStep();
+        stepMetadata = jobMetadata.getStep(jobStep);
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), step));
+            log.debug(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), stepMetadata.getName()));
         }
-        return step;
+        return stepMetadata.toStep();
     }
 
-    private Step[] doneSteps = null;
+    private List<StepMetadata> doneSteps = null;
 
     @Override
     public boolean isDone() {
         Step step = getCurrentStep();
         int code = step.code();
         if (doneSteps == null) {
-            doneSteps = engine.getStepRegistry().getDoneSteps(jobClass);
+            JobMetadata metadata = engine.getStepRegistry().getMetadata(jobClass);
+            doneSteps = metadata.getDoneSteps();
         }
-        for(Step s: doneSteps) {
-            if (code == s.code()) {
+        for(StepMetadata s: doneSteps) {
+            if (code == s.getCode()) {
                 return true;
             }
         }

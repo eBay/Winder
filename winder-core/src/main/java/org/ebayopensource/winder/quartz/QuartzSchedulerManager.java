@@ -162,7 +162,8 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         JobId jobId = jd.getJobId();
 
         // Create trigger
-        Trigger t = createStagedTrigger(input.getStepInterval(), input.getJobDuration(), new Date(), jobId);
+        Trigger t = createStagedTrigger(input.getStepInterval(), input.getJobDuration(),
+                input.getJobStartTime(), jobId);
 
 
         // Child job was scheduled, add child job id to list in parent context

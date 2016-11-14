@@ -95,6 +95,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setStepInterval(int stepInterval) {
         this.stepInterval = stepInterval;
+        put("winder_step_interval", stepInterval);
     }
 
     @Override
@@ -104,12 +105,19 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setJobDuration(int jobDuration) {
         this.jobDuration = jobDuration;
+        put("winder_job_duration", jobDuration);
     }
 
     @Override
     public Date getJobStartTime() {
         if (jobStartTime == null) {
-            jobStartTime = new Date();
+            long startTime = getLong("winder_job_start_time", -1);
+            if (startTime > 0) {
+                jobStartTime = new Date(startTime);
+            }
+            else {
+                jobStartTime = new Date();
+            }
         }
         return jobStartTime;
     }
@@ -128,6 +136,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setJobStartTime(Date jobStartTime) {
         this.jobStartTime = jobStartTime;
+        put("winder_job_start_time", jobStartTime.getTime());
     }
 
     @Override

@@ -52,6 +52,11 @@ public interface WinderJobContext {
      */
     String getJobIdAsString();
 
+    /**
+     * The first time, it will be -1.
+     *
+     * @return current job step code
+     */
     int getJobStep();
 
     void setJobStep(int step);
@@ -68,11 +73,11 @@ public interface WinderJobContext {
 
     void setAwaitingForAction(boolean isAwaiting);
 
-    void setComplete();
+    void done(StatusEnum finalStatus);
 
     void setError();
 
-    void setCompleteWithWarning();
+//    void setCompleteWithWarning();
 
     StatusEnum getJobStatus();
 

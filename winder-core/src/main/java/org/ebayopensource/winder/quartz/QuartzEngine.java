@@ -25,6 +25,8 @@
 package org.ebayopensource.winder.quartz;
 
 import org.ebayopensource.winder.*;
+import org.ebayopensource.winder.metadata.StepRegistry;
+import org.ebayopensource.winder.metadata.WinderStepRegistry;
 import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

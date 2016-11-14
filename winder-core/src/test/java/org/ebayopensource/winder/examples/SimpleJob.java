@@ -25,21 +25,18 @@
 package org.ebayopensource.winder.examples;
 
 import org.ebayopensource.winder.*;
+import org.ebayopensource.winder.anno.DoneStep;
+import org.ebayopensource.winder.anno.FirstStep;
 import org.ebayopensource.winder.anno.Job;
 
 /**
  * @author Sheldon Shao xshao@ebay.com on 10/12/16.
  * @version 1.0
  */
-@Job(
-        type = "Test",
-
-        firstStep = "STEP1",
-
-        doneSteps = {"ERROR", "DONE"}
-)
+@Job(type = "Test")
 public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInput, TaskResult>> {
 
+    @FirstStep
     STEP1(10) {
         @Override
         public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
@@ -72,6 +69,8 @@ public enum SimpleJob implements Step<TaskInput, TaskResult, TaskContext<TaskInp
             System.out.println("ERROR");
         }
     },
+
+    @DoneStep
     DONE(50) {
         @Override
         public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {

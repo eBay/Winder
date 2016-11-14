@@ -24,6 +24,9 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.winder.metadata.JobMetadata;
+import org.ebayopensource.winder.metadata.StepMetadata;
+
 /**
  * Task Context
  *
@@ -93,5 +96,16 @@ public interface TaskContext<TI extends TaskInput, TR extends TaskResult> {
 
     TR getTaskResult();
 
-//    void setTaskResult(Parameters<Object> result);
+    /**
+     * Return current step metadata
+     *
+     * @return current step metadata
+     */
+    StepMetadata getStepMetadata();
+
+    /**
+     *
+     * @return
+     */
+    JobMetadata getJobMetadata();
 }

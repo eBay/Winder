@@ -70,16 +70,14 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
 
         String createDateStr = engine.formatDate(createDate);
 
-        String firstStep = null;
-
+        String firstStep = "-1";
         if (Step.class.isAssignableFrom(clazz)) {
             //Make sure it was registered
             engine.getStepRegistry().register(clazz);
-            Step s = engine.getStepRegistry().getFirstStep(clazz);
-            firstStep = String.valueOf(s != null ? s.code() : 0);
+            firstStep = "-1";
         }
         else if (Runnable.class.isAssignableFrom(clazz)) {
-            firstStep = "run";
+            firstStep = "-1";
         }
         else {
             throw new IllegalStateException("Unsupported job type:" + clazz.getName());

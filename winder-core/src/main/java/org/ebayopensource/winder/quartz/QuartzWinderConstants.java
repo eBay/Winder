@@ -40,6 +40,7 @@ public interface QuartzWinderConstants {
     String KEY_JOBSTATUS = "@jobstatus";
     String KEY_JOBSTATUSMSG = "@jobstatusmsg";
     String KEY_JOBSTAGE = "@jobstage";
+    String KEY_JOB_STEP = "@job_step";
     String KEY_JOBINPUT = "@jobinput";
     String KEY_JOBRESULT = "@jobresult";
     String KEY_JOBCREATEDATE = "@jobcreatedate";

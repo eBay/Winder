@@ -50,7 +50,7 @@ public class SimpleJobTest {
     @Test
     public void testJob() throws Exception {
         engine.scheduleJob(SimpleJob.class);
-        Thread.sleep(20000);
+        Thread.sleep(10000);
     }
 
     @AfterClass

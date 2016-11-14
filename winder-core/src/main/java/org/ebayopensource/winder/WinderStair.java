@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.winder.metadata.JobMetadata;
+import org.ebayopensource.winder.metadata.StepMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,16 +52,19 @@ public class WinderStair implements WinderJob {
 
     private Logger log;
 
-    private Class<? extends Step> jobClass;
+    private final Class<? extends Step> jobClass;
 
-    private String jobType;
+    private final JobMetadata metadata;
+
+    private final String jobType;
 
     public WinderStair(WinderEngine engine, Class<? extends Step> jobClass) {
         this.engine = engine;
         this.log = LoggerFactory.getLogger(jobClass);
         this.schedulerManager = engine.getSchedulerManager();
         this.jobClass = jobClass;
-        this.jobType = engine.getStepRegistry().getJobType(jobClass);
+        this.metadata = engine.getStepRegistry().getMetadata(jobClass);
+        this.jobType = metadata.getJobType();
     }
 
     protected TaskContext createContext(WinderJobContext ctx) throws Exception {
@@ -80,6 +85,8 @@ public class WinderStair implements WinderJob {
             while (stepCount < maxSteps) {
                 //Load the context from DB again, because other instance may cancel the job.
                 Step currentStep = taskContext.getCurrentStep();
+                StepMetadata metadata = taskContext.getStepMetadata();
+
                 if (doExecute(currentStep, taskContext, ctx)) {
                     if (currentStep.code()  == taskContext.getCurrentStep().code()) {
                         break;
@@ -125,6 +132,7 @@ public class WinderStair implements WinderJob {
                 catch(WinderException we) {
                     log.error(jobType + " Update the status of job db error", we);
                 }
+
             }
         }
         else {
@@ -145,7 +153,15 @@ public class WinderStair implements WinderJob {
             if (updates != null && updates.size() >= maxSteps) {
                 throw new WinderJobException("Winder stair max stages (" + maxSteps + ") exceeded. Runaway job terminated.");
             }
+
+            StepMetadata metadata = stepContext.getStepMetadata();
             currentStep.execute(stepContext);
+
+            if (metadata != null && (metadata.isError() || metadata.isDone())) {
+                stepContext.getJobContext().done(metadata.getFinalStatus());
+                return false;
+            }
+
             return true;
         } catch (final Exception e) {
             log.error(jobType + " unexpected exception occurred", e);
@@ -168,13 +184,9 @@ public class WinderStair implements WinderJob {
         }
     }
 
-    private Step errorStep;
-
     protected Step getErrorStep() {
-        if (errorStep == null) {
-            errorStep = engine.getStepRegistry().getErrorStep(jobClass);
-        }
-        return errorStep;
+        StepMetadata errorStep = metadata.getErrorStep();
+        return errorStep != null ? errorStep.toStep() : null;
     }
 
     public WinderEngine getEngine() {

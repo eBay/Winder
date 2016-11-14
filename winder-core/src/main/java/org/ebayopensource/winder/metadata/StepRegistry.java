@@ -22,53 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder;
+package org.ebayopensource.winder.metadata;
 
-import org.ebayopensource.winder.examples.SimpleJob;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.ebayopensource.winder.Step;
 
 /**
- * Winder Step Registry
+ * Step Registry
  *
- * @author Sheldon Shao xshao@ebay.com on 11/7/16.
+ * @author Sheldon Shao xshao@ebay.com on 10/12/16.
  * @version 1.0
  */
-public class WinderStepRegistryTest {
+public interface StepRegistry {
 
+    /**
+     * Lookup the step for given code.  If the given code is -1, then return first step
+     *
+     * @param clazz
+     * @param code
+     * @return
+     */
+    Step lookup(Class<? extends Step> clazz, final int code);
 
-    @Test
-    public void lookup() throws Exception {
-        WinderStepRegistry registry = new WinderStepRegistry();
-        registry.register(SimpleJob.class);
+    JobMetadata register(Class<? extends Step> clazz);
 
-        assertEquals(registry.lookup(SimpleJob.class, 10).code(), 10);
-        assertEquals(registry.lookup(SimpleJob.class, 20).code(), 20);
-    }
-
-    @Test
-    public void register() throws Exception {
-
-    }
-
-    @Test
-    public void getJobType() throws Exception {
-
-    }
-
-    @Test
-    public void getFirstStep() throws Exception {
-
-    }
-
-    @Test
-    public void getErrorStep() throws Exception {
-
-    }
-
-    @Test
-    public void getDoneSteps() throws Exception {
-
-    }
+    JobMetadata getMetadata(Class<? extends Step> clazz);
 }

@@ -216,6 +216,14 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public TR getTaskResult() {
+        if (taskResult == null) {
+            String resultText = jobDataMap.getString(KEY_JOBRESULT);
+            try {
+                taskResult = (TR) new WinderTaskResult(JsonUtil.jsonToParameters(resultText));
+            } catch (IOException e) {
+                log.warn("Parsing task result error:" + resultText, e);
+            }
+        }
         return taskResult;
     }
 
@@ -227,6 +235,20 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public TI getTaskInput() {
+        if (taskInput == null) {
+            String inputTxt = jobDataMap.getString(KEY_JOBINPUT);
+            String jobClass = jobDataMap.getString(KEY_JOBCLASS);
+            try {
+                WinderTaskInput ti = new WinderTaskInput(JsonUtil.jsonToParameters(inputTxt));
+                ti.setJobOwner(getOwner());
+                ti.setJobClass(Class.forName(jobClass));
+                taskInput = (TI)ti;
+            } catch (IOException e) {
+                log.warn("Parsing task input error:" + inputTxt, e);
+            } catch (ClassNotFoundException e) {
+                log.error("Job class not found:" + jobClass, e);
+            }
+        }
         return taskInput;
     }
 
@@ -247,6 +269,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
             try {
                 return JsonUtil.readValue(text, ArrayList.class);
             } catch (IOException e) {
+                log.warn("Parsing task ids error:" + text, e);
             }
         }
         return new ArrayList<>(1);

@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.winder.metadata.StepRegistry;
+
 import java.util.Date;
 
 /**

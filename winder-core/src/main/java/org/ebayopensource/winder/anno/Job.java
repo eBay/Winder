@@ -44,27 +44,4 @@ public @interface Job {
      * @return
      */
     String type() default "";
-
-    /**
-     * Fist step code.
-     * The step with lowest code will be picked if no firstStep was specified
-     *
-     * @return first step code
-     */
-    String firstStep();
-
-    /**
-     * It will try to get the ERROR step by name "ERROR" first,
-     *    if there is no error step specified.
-     * @return
-     */
-    String errorStep() default "ERROR";
-
-
-    /**
-     *  Steps is considered as "DONE"
-     *
-     * @return
-     */
-    String[] doneSteps();
 }

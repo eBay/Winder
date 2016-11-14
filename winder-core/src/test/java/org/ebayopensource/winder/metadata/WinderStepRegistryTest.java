@@ -22,25 +22,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder;
+package org.ebayopensource.winder.metadata;
+
+import org.ebayopensource.winder.examples.SimpleJob;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Step Registry
+ * Winder Step Registry
  *
- * @author Sheldon Shao xshao@ebay.com on 10/12/16.
+ * @author Sheldon Shao xshao@ebay.com on 11/7/16.
  * @version 1.0
  */
-public interface StepRegistry {
+public class WinderStepRegistryTest {
 
-    Step lookup(Class<? extends Step> clazz, final int code);
 
-    void register(Class<? extends Step> clazz);
+    @Test
+    public void lookup() throws Exception {
+        WinderStepRegistry registry = new WinderStepRegistry();
+        registry.register(SimpleJob.class);
 
-    String getJobType(Class<? extends Step> clazz);
+        assertEquals(registry.lookup(SimpleJob.class, 10).code(), 10);
+        assertEquals(registry.lookup(SimpleJob.class, 20).code(), 20);
+    }
 
-    Step getFirstStep(Class<? extends Step> clazz);
+    @Test
+    public void register() throws Exception {
 
-    Step getErrorStep(Class<? extends Step> clazz);
+    }
 
-    Step[] getDoneSteps(Class<? extends Step> clazz);
+    @Test
+    public void getJobType() throws Exception {
+
+    }
+
+    @Test
+    public void getFirstStep() throws Exception {
+
+    }
+
+    @Test
+    public void getErrorStep() throws Exception {
+
+    }
+
+    @Test
+    public void getDoneSteps() throws Exception {
+
+    }
 }
