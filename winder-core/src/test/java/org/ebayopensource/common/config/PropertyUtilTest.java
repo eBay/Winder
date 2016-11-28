@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -82,6 +83,9 @@ public class PropertyUtilTest {
         map.put("str1", "abc");
         map.put("str2", new Object());
 
+        map.put("sample_enum", SampleEnum.THREE);
+        map.put("sample_service", new SampleImpl());
+
         SimpleBean bean = new SimpleBean();
         PropertyUtil.inject(bean, map);
 
@@ -95,6 +99,8 @@ public class PropertyUtilTest {
 
         assertEquals(bean.str1, "abc");
         assertEquals(bean.str2, "str2");
+        assertEquals(bean.sampleEnum, SampleEnum.THREE);
+        assertNotNull(bean.sampleService);
 
         PropertyUtil.inject(new NoInjection(), map);
         PropertyUtil.inject(new IllegalAccess(), map);
@@ -151,5 +157,32 @@ public class PropertyUtilTest {
         @InjectProperty(name="str2")
         private String str2 = "str2";
 
+
+        @InjectProperty(name="sample_enum")
+        private SampleEnum sampleEnum;
+
+
+        @InjectProperty(name="sample_service")
+        private SampleService sampleService;
     }
+
+
+    public interface SampleService {
+
+        void sayHello();
+    }
+
+    public class SampleImpl implements SampleService {
+
+        @Override
+        public void sayHello() {
+            System.out.println("Hello world!");
+        }
+    }
+
+
+    public enum SampleEnum {
+        ONE, TWO, THREE;
+    }
+
 }

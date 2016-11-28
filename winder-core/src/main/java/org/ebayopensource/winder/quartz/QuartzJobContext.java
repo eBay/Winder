@@ -81,7 +81,7 @@ public class QuartzJobContext implements WinderJobContext {
         map = jobDetail.getJobDataMap();
     }
 
-    public WinderJobDetail getJobDetail() {
+    public <TI extends TaskInput, TR extends TaskResult>  WinderJobDetail<TI, TR> getJobDetail() {
         return jobDetail;
     }
 
@@ -226,17 +226,23 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
 
-    public WinderJobSummary getJobStateData() {
+    public <TI extends TaskInput, TR extends TaskResult> WinderJobSummary<TI, TR> getJobSummary() {
         return summary;
+    }
+
+    @Override
+    public StatusUpdate addUpdate(StatusEnum status, String message) {
+        return getJobSummary().addUpdate(status, message);
+    }
+
+    @Override
+    public StatusUpdate addUpdate(StatusEnum status, String message, Throwable cause) {
+        return getJobSummary().addUpdate(status, message, cause);
     }
 
     public JobId[] getChildJobs() {
         return summary.getChildJobIds();
     }
-
-//    public JobKey getJobKey() {
-//        return jobDetail.getKey();
-//    }
 
     public void updateJobData() throws WinderException{
         scheduler.updateJobData(jobDetail);

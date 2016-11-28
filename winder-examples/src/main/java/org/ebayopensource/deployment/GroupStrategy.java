@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2016 eBay Software Foundation. All rights reserved.
- *
+ * <p>
  * Licensed under the MIT license.
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *
+ * <p>
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,56 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder;
+package org.ebayopensource.deployment;
 
-import org.ebayopensource.common.util.Parameters;
+import org.ebayopensource.deployment.InstanceState;
+import org.ebayopensource.winder.TaskStatusData;
 
-import java.util.Date;
 import java.util.List;
 
 /**
- * Task Status Data
+ * Group strategy
  *
- * @author Sheldon Shao xshao@ebay.com on 10/16/16.
+ * @author Sheldon Shao xshao@ebay.com on 11/27/16.
  * @version 1.0
  */
-public interface TaskStatusData {
+public interface GroupStrategy {
 
-    String getId();
-
-    String getName();
-
-    Date getDateCreated();
-
-    Date getStartTime();
-
-    void setStartTime(Date startTime);
-
-    Date getEndTime();
-
-    void setEndTime(Date endTime);
-
-    StatusEnum getExecutionStatus();
-
-    void setExecutionStatus(StatusEnum executionStatus);
-
-    String getSessionId();
-
-    void setSessionId(String sessionId);
-
-    String getTarget();
-
-    void setTarget(String target);
-
-    String getAction();
-
-    void setAction(String action);
-
-    Parameters<Object> getResult();
-
-    void setResult(Parameters<Object> result);
-
-    StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage);
-
-    List<StatusUpdate> getUpdates();
+    /**
+     * Group strategy
+     *
+     * @param statuses Instance statuses
+     * @param groupId Group Id from 1
+     * @param maxGroup maximum group number
+     * @return
+     */
+    List<InstanceState> getGroup(List<TaskStatusData> statuses, int groupId, int maxGroup);
 }

@@ -74,16 +74,6 @@ public class QuartzStatusData implements TaskStatusData {
     }
 
     @Override
-    public String getManagedBy() {
-        return map.getString(String.format(KEY_TASK_MANAGEDBY, id));
-    }
-
-    @Override
-    public void setManagedBy(String managedBy) {
-        map.put(String.format(KEY_TASK_MANAGEDBY, id), managedBy);
-    }
-
-    @Override
     public String getName() {
         return map.getString(String.format(KEY_TASK_NAME, id));
     }
@@ -138,6 +128,16 @@ public class QuartzStatusData implements TaskStatusData {
     @Override
     public void setExecutionStatus(StatusEnum executionStatus) {
         map.put(String.format(KEY_TASK_STATUS, id), executionStatus.name());
+    }
+
+    @Override
+    public String getSessionId() {
+        return map.getString(String.format(KEY_TASK_SESSION_ID, id));
+    }
+
+    @Override
+    public void setSessionId(String sessionId) {
+        map.put(String.format(KEY_TASK_SESSION_ID, id), sessionId);
     }
 
     @Override

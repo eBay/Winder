@@ -28,8 +28,10 @@ package org.ebayopensource.common.util;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Data Util
@@ -289,13 +291,20 @@ public class DataUtil {
             String str = (String)object;
             str = str.trim();
 
-            result = StringUtils.split(str, ' ');
+            result = StringUtils.split(str, ',');
         }
         else if (object instanceof Object[]) {
             Object[] array = (Object[])object;
             result = new String[array.length];
             for (int i = 0; i < array.length; i++) {
                 result[i] = getString(array[i], null);
+            }
+        }
+        else if (object instanceof List) {
+            List list = (List)object;
+            result = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                result[i] = getString(list.get(i), null);
             }
         }
         else if (object.getClass().isArray()) {
@@ -350,6 +359,62 @@ public class DataUtil {
             result = defValue;
         }
         return result;
+    }
+
+    public static List<String> getStringList(Object object)
+    {
+        if (object == null) {
+            return null;
+        }
+
+        String[] result;
+        if (object instanceof List) {
+            List<String> orig = (List<String>)object;
+            List<String> list = new ArrayList<>(orig.size());
+            for(int i = 0; i < orig.size(); i ++) {
+                list.add(String.valueOf(orig.get(i)));
+            }
+            return list;
+        }
+        else if (object instanceof String[]) {
+            result = (String[])object;
+            List<String> list = new ArrayList<>(result.length);
+            Collections.addAll(list, result);
+            return list;
+        }
+        else if (object instanceof String) {
+            String str = (String)object;
+            str = str.trim();
+
+            result = StringUtils.split(str, ',');
+            List<String> list = new ArrayList<>(result.length);
+            Collections.addAll(list, result);
+            return list;
+        }
+        else if (object instanceof Object[]) {
+            Object[] array = (Object[])object;
+            List<String> list = new ArrayList<>(array.length);
+            for (Object anArray : array) {
+                list.add(getString(anArray, null));
+            }
+            return list;
+        }
+        else if (object.getClass().isArray()) {
+            int len = Array.getLength(object);
+            List<String> list = new ArrayList<>(len);
+            for (int i = 0; i < len; i++) {
+                list.add(getString(Array.get(object, i), null));
+            }
+            return list;
+        }
+        else if (object instanceof Number
+                || object instanceof Boolean
+                || object instanceof Character) {
+            return Collections.singletonList(object.toString());
+        }
+        else {
+            return null;
+        }
     }
 }
 

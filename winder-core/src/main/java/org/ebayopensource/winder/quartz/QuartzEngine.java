@@ -72,8 +72,8 @@ public class QuartzEngine implements WinderEngine {
         instance = engine;
     }
 
-    public QuartzEngine(Properties properties) {
-        this(new QuartzConfiguration(properties));
+    public QuartzEngine() {
+        this(new QuartzConfiguration());
         this.jobDetailFactory = new QuartzJobDetailFactory(this);
         QuartzInitializer initializer = new QuartzInitializer();
         Scheduler scheduler = initializer.init(this);
@@ -85,10 +85,6 @@ public class QuartzEngine implements WinderEngine {
     protected QuartzEngine(WinderConfiguration configuration) {
         this.configuration = configuration;
         setClusterName(configuration.getString("winder.cluster", "winder"));
-    }
-
-    public QuartzEngine() {
-        this(System.getProperties());
     }
 
     @Override

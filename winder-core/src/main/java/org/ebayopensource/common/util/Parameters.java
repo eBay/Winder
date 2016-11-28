@@ -27,6 +27,7 @@ package org.ebayopensource.common.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,4 +88,13 @@ public interface Parameters<V> extends Map<String, V> {
      * @return value as Parameters, if the value is map, the map will wrapped as a Parameters
      */
     Parameters<V> getParameters(String key);
+
+    /**
+     * Parsing the String value to List<String>.
+     * The string will be split by ",".
+     *
+     * @param key Key
+     * @return
+     */
+    List<String> getList(String key);
 }

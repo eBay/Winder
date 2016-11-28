@@ -124,16 +124,28 @@ public class PropertyUtil {
         else if (type == Boolean.TYPE || type == Boolean.class) {
             return DataUtil.doGetBoolean(value, null);
         }
+        else if (type.isEnum()) {
+            if (type.isInstance(value)) {
+                return value;
+            }
+            else if (value instanceof String) {
+                return Enum.valueOf(type, (String)value);
+            }
+            else {
+                return null;
+            }
+        }
+        else if (type.isInterface()) {
+            return value;
+        }
         else {
             return DataUtil.getString(value, null);
         }
     }
 
     private static boolean isSupportedType(Class type) {
-        return type == Integer.TYPE || type == Integer.class ||
-                type == Long.TYPE || type == Long.class ||
-                type == Boolean.TYPE || type == Boolean.class ||
-                type == String.class;
+        return type.isInterface() || type.isEnum() || type == Integer.TYPE || type == Integer.class || type == Long.TYPE
+                || type == Long.class || type == Boolean.TYPE || type == Boolean.class || type == String.class;
     }
 
     private static List<PropertyInjector> getInjectors(Class clazz) {

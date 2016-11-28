@@ -97,4 +97,16 @@ public class AbstractParametersTest {
         assertArrayEquals(map.getArray("test1", new String[] { "test" }), new Object[] {"abc", "bcd"});
         assertArrayEquals(map.getArray("test2", new String[] { "test" }), new String[] { "abc" });
     }
+
+    @Test
+    public void getList() throws Exception {
+        assertNull(parameters.getList("test"));
+
+        ParametersMap map = new ParametersMap();
+        map.put("test1", new Object[] {"abc", "bcd"});
+        map.put("test2", "abc");
+
+        assertArrayEquals(map.getList("test1").toArray(), new String[] {"abc", "bcd"});
+        assertArrayEquals(map.getList("test2").toArray(), new String[] { "abc" });
+    }
 }

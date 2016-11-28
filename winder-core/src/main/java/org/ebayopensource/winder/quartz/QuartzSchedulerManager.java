@@ -148,7 +148,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         if (clazz == null) {
             throw new IllegalArgumentException("Need job class ");
         }
-        String owner = parentJobCtx.getJobStateData().getOwner();
+        String owner = parentJobCtx.getJobSummary().getOwner();
         if (input.getJobOwner() == null) {
             input.setJobOwner(owner);
         }

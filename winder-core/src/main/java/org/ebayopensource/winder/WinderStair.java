@@ -148,7 +148,7 @@ public class WinderStair implements WinderJob {
              * Determine if the job has been running for too long. We prevent too many job step updates to prevent looping that
              * might fill the database and indicate the job is not completing as desired.
              */
-            WinderJobSummary summary = ctx.getJobStateData();
+            WinderJobSummary summary = ctx.getJobSummary();
             List<StatusUpdate> updates = summary.getUpdates();
             if (updates != null && updates.size() >= maxSteps) {
                 throw new WinderJobException("Winder stair max stages (" + maxSteps + ") exceeded. Runaway job terminated.");

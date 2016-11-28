@@ -75,52 +75,6 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
 
     StatusUpdate addUpdate(StatusEnum status, String message, Throwable ex);
 
-//    public StatusUpdateData changeJobData(final JobStatusEnum status,
-//                                          final PaasDetails details) {
-//
-//        setStatus(status);
-//        StringBuilder buf = new StringBuilder();
-//        if (details.hasErrors()) {
-//            buf.append(StringUtils.join(details.getErrors(), " "));
-//            if (details.getExceptionStack() != null) {
-//                buf.append('\n');
-//                buf.append(ServletUtils.formatString(details.getExceptionStack(), MAX_STACK, true));
-//            }
-//        } else if (details.hasMessages()) {
-//            buf.append(StringUtils.join(details.getMessages(), " "));
-//        }
-//        setStatusMsg(buf.toString());
-//        return createStatusUpdateData();
-//    }
-//
-//    public StatusUpdateData changeJobData(final JobStatusEnum status,
-//                                          final Throwable ex, final String msg) {
-//        final StatusUpdateData lastStatusUpdate = StatusUpdateDataUtil.getLastStatusUpdateDate(JobUtils.JOBSTATUSUPDATE_PREFIX, m_map);
-//        if (lastStatusUpdate == null ||
-//                !lastStatusUpdate.getExecutionStatus().equals(status) ||
-//                !lastStatusUpdate.getStatusMessage().equals(msg)) {
-//
-//            setStatus(status);
-//            if ((ex != null) && !(ex instanceof IllegalArgumentException)) {
-//                StringBuilder buf = new StringBuilder();
-//                buf.append(msg);
-//                StringWriter sw = new StringWriter();
-//                PrintWriter pw = new PrintWriter(sw);
-//
-//                StringBuffer tmp = sw.getBuffer();
-//                tmp.append('\n');
-//                // start stack trace on its own line
-//                ex.printStackTrace(pw); // NOSONAR
-//                buf.append(" **** ");
-//                buf.append(ServletUtils.formatString(tmp.toString(), MAX_STACK, true));
-//                setStatusMsg(buf.toString());
-//            } else {
-//                setStatusMsg(msg);
-//            }
-//            return createStatusUpdateData();
-//        }
-//        return lastStatusUpdate;
-//    }
 
     String getTarget();
 
@@ -165,21 +119,4 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
      * @return
      */
     List<TaskStatusData> getAllTaskStatuses();
-
-//
-//    public int getPercentComplete() {
-//        String pctCmpltString = m_map.getString("KEY_JOBPCTCOMPLETE"); //for eoe upgrade, NOT SURE if this KEY_JOBPCTCOMPLETE will work
-//        int result = 0;
-//        if (pctCmpltString != null) {
-//            try {
-//                result = Integer.parseInt(pctCmpltString);
-//            } catch (NumberFormatException e) {
-//                throw new IllegalArgumentException("bad pct complete " + pctCmpltString, e);
-//            }
-//        }
-//        if (result < 0 || result > 100) {
-//            throw new IllegalArgumentException("bad pct complete " + pctCmpltString);
-//        }
-//        return result;
-//    }
 }

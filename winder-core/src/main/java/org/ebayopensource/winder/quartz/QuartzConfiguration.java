@@ -24,6 +24,7 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.common.util.PropertyParameters;
 import org.ebayopensource.winder.WinderConfiguration;
 
@@ -31,17 +32,25 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 /**
+ * Quartz Configuration
+ *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
  */
-public class QuartzConfiguration extends PropertyParameters implements WinderConfiguration {
+public class QuartzConfiguration extends ParametersMap<Object> implements WinderConfiguration {
 
-    public QuartzConfiguration(Properties properties) {
-        super(properties);
+    private Properties properties = System.getProperties();
+
+    public Object get(Object key) {
+        Object value = super.get(key);
+        if (value == null) {
+            value = properties.get(key);
+        }
+        return value;
     }
 
-    public QuartzConfiguration() {
-        this(System.getProperties());
+    public boolean containsKey(Object key) {
+        return super.containsKey(key) || properties.containsKey(key);
     }
 
     private TimeZone timeZone = null;

@@ -26,6 +26,9 @@ package org.ebayopensource.common.util;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 /**
@@ -155,5 +158,27 @@ public class DataUtilTest {
         assertArrayEquals(DataUtil.getIntArray('a', defaultIntArray), defaultIntArray);
 
         assertArrayEquals(DataUtil.getIntArray(new int[] {345, 123} , defaultIntArray), new int[] {345, 123});
+    }
+
+    @Test
+    public void getStringList() throws Exception {
+        assertNull(DataUtil.getStringList(null));
+        assertNull(DataUtil.getStringList(new Object()));
+
+        List<String> list = new ArrayList<>();
+        list.add("true");
+        assertArrayEquals(DataUtil.getStringList(list).toArray(), new String[] {"true"});
+
+        assertArrayEquals(DataUtil.getStringList(Boolean.TRUE).toArray(), new String[] {"true"});
+        assertArrayEquals(DataUtil.getStringList(Boolean.FALSE).toArray(), new String[] {"false"});
+        assertArrayEquals(DataUtil.getStringList("True").toArray(), new String[] { "True" });
+        assertArrayEquals(DataUtil.getStringList("99").toArray(), new String[] {"99"});
+        assertArrayEquals(DataUtil.getStringList(" 88 ").toArray(), new String[] {"88"});
+        assertArrayEquals(DataUtil.getStringList(new String[] {"DDDDD"}).toArray(), new String[] {"DDDDD"});
+        assertArrayEquals(DataUtil.getStringList(888L).toArray(), new String[] {"888"});
+        assertArrayEquals(DataUtil.getStringList('a').toArray(), new String[] {"a"});
+
+        assertArrayEquals(DataUtil.getStringList(new Object[] {'a', 123}).toArray(), new String[] {"a", "123"});
+        assertArrayEquals(DataUtil.getStringList(new int[] {345, 123}).toArray(), new String[] {"345", "123"});
     }
 }

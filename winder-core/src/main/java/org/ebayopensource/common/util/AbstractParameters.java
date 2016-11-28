@@ -26,6 +26,7 @@ package org.ebayopensource.common.util;
 
 
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -122,5 +123,17 @@ public abstract class AbstractParameters<V> extends AbstractMap<String, V>
         else {
             return new ParametersMap<>(value);
         }
+    }
+
+    /**
+     * Parsing the String value to List<String>.
+     * The string will be split by ",".
+     *
+     * @param key Key
+     * @return
+     */
+    public List<String> getList(String key) {
+        Object value = get(key);
+        return DataUtil.getStringList(value);
     }
 }

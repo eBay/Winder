@@ -218,10 +218,15 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     public TR getTaskResult() {
         if (taskResult == null) {
             String resultText = jobDataMap.getString(KEY_JOBRESULT);
-            try {
-                taskResult = (TR) new WinderTaskResult(JsonUtil.jsonToParameters(resultText));
-            } catch (IOException e) {
-                log.warn("Parsing task result error:" + resultText, e);
+            if (resultText != null) {
+                try {
+                    taskResult = (TR) new WinderTaskResult(JsonUtil.jsonToParameters(resultText));
+                } catch (IOException e) {
+                    log.warn("Parsing task result error:" + resultText, e);
+                }
+            }
+            else {
+                taskResult = (TR)new WinderTaskResult();
             }
         }
         return taskResult;
@@ -278,6 +283,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     public TaskStatusData addTaskStatus(String taskId, String taskName) {
         List<String> taskIds = getTaskIds();
         taskIds.add(taskId);
+        //Low performance
         try {
             jobDataMap.put(KEY_TASKS, JsonUtil.writeValueAsString(taskIds));
         } catch (IOException e) {
