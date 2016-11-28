@@ -22,18 +22,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder.examples.deployment3.tasks;
+package org.ebayopensource.winder.examples.deployment2.tasks;
 
+import org.ebayopensource.common.config.InjectProperty;
+import org.ebayopensource.deployment.DeploymentAPI;
+import org.ebayopensource.deployment.InstanceState;
 import org.ebayopensource.winder.*;
 
+import java.util.List;
+
 /**
- * @author Sheldon Shao xshao@ebay.com on 11/28/16.
+ * Pre check
+ *
+ * @author Sheldon Shao xshao@ebay.com on 11/27/16.
  * @version 1.0
  */
-public class Done implements Task<TaskInput, TaskResult> {
+public class Precheck implements Task<TaskInput, TaskResult> {
+    /**
+     * Deployment API
+     */
+    @InjectProperty(name="deployment_api")
+    private DeploymentAPI deploymentAPI;
 
     @Override
     public TaskState execute(TaskContext<TaskInput, TaskResult> ctx, TaskInput input, TaskResult result) throws Exception {
+        List<String> targetServers = input.getList("targets");
+
+        List<InstanceState> states = deploymentAPI.preCheck(targetServers);
+        //Show status update in job summary
+        WinderJobSummary summary = ctx.getJobContext().getJobSummary();
+        summary.addUpdate(StatusEnum.EXECUTING, "Pre checked, total instances:" + targetServers.size());
+
+        //Set status for each task
+        for(int i = 0; i < targetServers.size(); i ++) {
+            InstanceState state = states.get(i);
+            TaskStatusData taskStatusData = summary.addTaskStatus(targetServers.get(i), state.getCode().name());
+            taskStatusData.setTarget(state.getFqdn());
+            taskStatusData.setAction(ctx.getCurrentStep().name());
+            taskStatusData.setExecutionStatus(StatusEnum.EXECUTING);
+        }
         return TaskState.COMPLETED;
     }
 }

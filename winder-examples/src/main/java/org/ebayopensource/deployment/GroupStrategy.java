@@ -24,7 +24,6 @@
  */
 package org.ebayopensource.deployment;
 
-import org.ebayopensource.deployment.InstanceState;
 import org.ebayopensource.winder.TaskStatusData;
 
 import java.util.List;

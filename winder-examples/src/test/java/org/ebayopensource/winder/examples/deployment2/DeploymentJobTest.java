@@ -1,4 +1,4 @@
-package org.ebayopensource.winder.examples.deployment3;
+package org.ebayopensource.winder.examples.deployment2;
 
 import org.ebayopensource.deployment.SimpleDeploymentAPI;
 import org.ebayopensource.deployment.SimpleGroupStrategy;
@@ -9,8 +9,6 @@ import org.ebayopensource.winder.quartz.QuartzEngineInitializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Test case for DeploymentJob

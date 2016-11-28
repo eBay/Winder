@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder.examples.deployment3.tasks;
+package org.ebayopensource.winder.examples.deployment2.tasks;
 
 import org.ebayopensource.common.config.InjectProperty;
 import org.ebayopensource.deployment.DeploymentAPI;
@@ -31,10 +31,6 @@ import org.ebayopensource.deployment.InstanceState;
 import org.ebayopensource.winder.*;
 
 import java.util.List;
-
-import static org.ebayopensource.winder.examples.deployment1.DeploymentJob.DONE;
-import static org.ebayopensource.winder.examples.deployment1.DeploymentJob.DOWNLOAD;
-import static org.ebayopensource.winder.examples.deployment1.DeploymentJob.STARTUP;
 
 /**
  * Validate

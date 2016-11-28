@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder.examples.deployment3.tasks;
+package org.ebayopensource.winder.examples.deployment2.tasks;
 
 import org.ebayopensource.common.config.InjectProperty;
 import org.ebayopensource.deployment.DeploymentAPI;
@@ -33,12 +33,13 @@ import org.ebayopensource.winder.*;
 import java.util.List;
 
 /**
- * Download task
+ * Startup
  *
  * @author Sheldon Shao xshao@ebay.com on 11/27/16.
  * @version 1.0
  */
-public class Download implements Task<TaskInput, TaskResult> {
+public class Startup implements Task<TaskInput, TaskResult> {
+
     /**
      * It should be inject from
      */
@@ -60,18 +61,17 @@ public class Download implements Task<TaskInput, TaskResult> {
         WinderJobSummary<TaskInput, TaskResult> summary = ctx.getJobContext().getJobSummary();
         List<TaskStatusData> taskStatuses = summary.getAllTaskStatuses();
         List<InstanceState> groupInstances = groupStrategy.getGroup(taskStatuses, groupId, 3);
-
         String step = ctx.getCurrentStep().name();
         //Set action and update information
         for(InstanceState instance: groupInstances) {
             TaskStatusData statusData = summary.getTaskStatus(instance.getFqdn());
             statusData.setAction(step);
-            statusData.addUpdate(StatusEnum.EXECUTING, "Downloading " + software);
+            statusData.addUpdate(StatusEnum.EXECUTING, "Starting " + software);
         }
+        ctx.getJobContext().addUpdate(StatusEnum.EXECUTING, "Starting " + software  + ", group:" + groupId);
 
-        ctx.getJobContext().addUpdate(StatusEnum.EXECUTING, "Downloading " + software + ", group:" + groupId);
-        deploymentAPI.download(groupInstances, software);
-        result.put("last_step", step);
+        result.put("last_step", ctx.getCurrentStep().name());
+        deploymentAPI.startup(groupInstances, software);
         return TaskState.COMPLETED;
     }
 }

@@ -22,14 +22,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ebayopensource.winder.examples.deployment3;
+package org.ebayopensource.winder.examples.deployment2;
 
 import org.ebayopensource.winder.*;
 import org.ebayopensource.winder.anno.DoneStep;
 import org.ebayopensource.winder.anno.ErrorStep;
 import org.ebayopensource.winder.anno.FirstStep;
 import org.ebayopensource.winder.anno.Job;
-import org.ebayopensource.winder.examples.deployment3.tasks.*;
+import org.ebayopensource.winder.examples.deployment2.tasks.*;
 
 
 /**
@@ -40,7 +40,7 @@ import org.ebayopensource.winder.examples.deployment3.tasks.*;
  * @author Sheldon Shao xshao@ebay.com on 11/28/16.
  * @version 1.0
  */
-@Job(type = "Deployment3")
+@Job(type = "Deployment2")
 public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<TaskInput, TaskResult>> {
 
     @FirstStep
