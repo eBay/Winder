@@ -13,7 +13,7 @@ The state machine is also using for maintaining hundreds of thousands VMs and ke
 
 ## Contributing
 <div style="text-align:right">
-  <img src="https://github.com/eBay/Winder/tree/master/docs//ebaysf-open-x.png" width="150px"/>
+  <img src="https://github.com/eBay/Winder/tree/master/docs/ebaysf-open-x.png" width="150px"/>
 </div>
 Refer to [CONTRIBUTING.md](/CONTRIBUTING.md) for more details on how to contribute code, documentation etc
 
