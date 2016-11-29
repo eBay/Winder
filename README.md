@@ -18,5 +18,3 @@ The state machine is also using for maintaining hundreds of thousands VMs and ke
 </div>
 Refer to [CONTRIBUTING.md](/CONTRIBUTING.md) for more details on how to contribute code, documentation etc
 
-
-
