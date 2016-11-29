@@ -1,4 +1,4 @@
-<img src="https://github.com/eBay/Winder/blob/master/docs/Winder.png"/>
+<img src="https://github.com/eBay/Winder/blob/master/docs/Winder-small.png" />
 ## Winder
 Winder is a simple state machine based on Quartz Scheduler. 
 It helps to write multiple steps tasks on Quartz Scheduler.  Winder derived from a state machine which is widly used in eBay Cloud.
