@@ -13,7 +13,7 @@ Your job has multiple tasks that can be finished in couple seconds, so that you 
 Winder can do it in background.
 
 ####Case 2:
-You have bunch of items, each item needs to be processed in couple of steps.Some of the step can be guaranteed finishing in couple seconds.
+You have bunch of items, each item needs to be processed in a couple of steps. Some of the steps can be guaranteed finishing in couple seconds.
 Winder can help you define the steps and let them work automatically.
 
 ####Case 3:
@@ -44,4 +44,4 @@ Production Use Cases: widely used in many distributed systems which eBay Cloud r
 </div>
 Refer to [CONTRIBUTING.md](/CONTRIBUTING.md) for more details on how to contribute code, documentation etc
 
-**Winder** is freely usable, licensed under the [LICENSE.md](/MIT license).
+**Winder** is freely usable, licensed under the [MIT license](LICENSE.md).
