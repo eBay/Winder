@@ -25,7 +25,9 @@ Winder can get this done easily.
 Production Use Cases: widely used in many distributed systems which eBay Cloud relies on.
 
 **Software Deployment/PaaS**: As the key part of eBay Cloud, Platform As A Service(PaaS) is widely used in eBay. Developer uses it to roll out code. Winder takes the key role in PaaS.
+
 **Virtual machine maintenance**: eBay has hundreds of thousands VMs. Keeping them healthy and available is very important. Winder makes this possible.
+
 **Provisioning container or VM**: Provisioning requires lots of communications with other systems. It is also built on Winder. 
 
 
