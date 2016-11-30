@@ -1,10 +1,8 @@
 package org.ebayopensource.winder.examples.deployment1;
 
 import org.ebayopensource.winder.TaskInput;
-import org.ebayopensource.winder.WinderEngine;
 import org.ebayopensource.winder.WinderTaskInput;
-import org.ebayopensource.winder.examples.helloworld.HelloJob;
-import org.ebayopensource.winder.quartz.QuartzEngineInitializer;
+import org.ebayopensource.winder.examples.WinderTest;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -15,14 +13,7 @@ import static org.junit.Assert.*;
  * @author Sheldon Shao xshao@ebay.com on 11/28/16.
  * @version 1.0
  */
-public class DeploymentJobTest {
-
-    private static WinderEngine engine;
-
-    @BeforeClass
-    public static void start() {
-        engine = QuartzEngineInitializer.start();
-    }
+public class DeploymentJobTest extends WinderTest {
 
     @Test
     public void testJob() throws Exception {
@@ -34,12 +25,5 @@ public class DeploymentJobTest {
         engine.scheduleJob(input);
 
         Thread.sleep(10000);
-    }
-
-    @AfterClass
-    public static void stop() {
-        if (engine != null) {
-            engine.stop();
-        }
     }
 }

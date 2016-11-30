@@ -3,11 +3,9 @@ package org.ebayopensource.winder.examples.deployment2;
 import org.ebayopensource.deployment.SimpleDeploymentAPI;
 import org.ebayopensource.deployment.SimpleGroupStrategy;
 import org.ebayopensource.winder.TaskInput;
-import org.ebayopensource.winder.WinderEngine;
 import org.ebayopensource.winder.WinderTaskInput;
-import org.ebayopensource.winder.quartz.QuartzEngineInitializer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.ebayopensource.winder.examples.WinderTest;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -16,13 +14,11 @@ import org.junit.Test;
  * @author Sheldon Shao xshao@ebay.com on 11/28/16.
  * @version 1.0
  */
-public class DeploymentJobTest {
+public class DeploymentJobTest extends WinderTest {
 
-    private static WinderEngine engine;
-
-    @BeforeClass
-    public static void start() {
-        engine = QuartzEngineInitializer.start();
+    @Before
+    public void start() {
+        super.start();
 
         engine.getConfiguration().put("deployment_api", new SimpleDeploymentAPI());
         engine.getConfiguration().put("group_strategy", new SimpleGroupStrategy());
@@ -38,12 +34,5 @@ public class DeploymentJobTest {
         engine.scheduleJob(input);
 
         Thread.sleep(10000);
-    }
-
-    @AfterClass
-    public static void stop() {
-        if (engine != null) {
-            engine.stop();
-        }
     }
 }
