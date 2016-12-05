@@ -193,8 +193,9 @@ public class PropertyUtil {
     /**
      * Inject the properties from parameters
      *
-     * @param obj
-     * @param parameters
+     * @param obj The target object to be injected
+     * @param parameters The properties
+     * @param <V> Type of parameter values
      */
     public static <V> void inject(Object obj, Map<String, V> parameters) {
         Class clazz = obj.getClass();

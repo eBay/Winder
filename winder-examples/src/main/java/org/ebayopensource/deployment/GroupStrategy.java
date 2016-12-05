@@ -42,7 +42,7 @@ public interface GroupStrategy {
      * @param statuses Instance statuses
      * @param groupId Group Id from 1
      * @param maxGroup maximum group number
-     * @return
+     * @return The group of Instances
      */
     List<InstanceState> getGroup(List<TaskStatusData> statuses, int groupId, int maxGroup);
 }

@@ -126,11 +126,11 @@ public abstract class AbstractParameters<V> extends AbstractMap<String, V>
     }
 
     /**
-     * Parsing the String value to List<String>.
+     * Parsing the String value to List&lt;String&gt;.
      * The string will be split by ",".
      *
      * @param key Key
-     * @return
+     * @return A list type value
      */
     public List<String> getList(String key) {
         Object value = get(key);

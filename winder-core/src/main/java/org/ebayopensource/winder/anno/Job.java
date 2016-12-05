@@ -51,7 +51,7 @@ public @interface Job {
      * Which group name will be use ?
      *
      * Priority:
-     * taskInput.group > @Job.group > winder default group name("formatted date")
+     * taskInput.group &gt; @Job.group &gt; winder default group name("formatted date")
      *
      * @return Group Name
      */

@@ -62,36 +62,50 @@ public @interface Cron {
 
     /**
      * Seconds
+     *
+     * @return Seconds
      */
     String seconds() default "0";
 
     /**
      * Minutes
+     *
+     * @return Minutes
      */
     String minutes() default "*";
 
     /**
      * Hours
+     *
+     * @return Hours
      */
     String hours() default "*";
 
     /**
      * Day of Month
+     *
+     * @return  Day of Month
      */
     String dayOfMonth() default "*";
 
     /**
      * Month
+     *
+     * @return Month
      */
     String month() default "*";
 
     /**
      * Day of Week
+     *
+     * @return Day Of Week
      */
     String dayOfWeek() default "*";
 
     /**
      * Year
+     *
+     * @return Year
      */
     String year() default "*";
 }

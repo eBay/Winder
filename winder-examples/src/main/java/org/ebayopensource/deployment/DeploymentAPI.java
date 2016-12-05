@@ -55,7 +55,7 @@ public interface DeploymentAPI {
      * Validate downloading/startup
      *
      * @param states Instance states
-     * @param step
+     * @param step The step name to validate
      * @return progress, 0-100 for each target. 100 means the task is done.  -1 means the task was failed
      */
     List<Integer> validate(List<InstanceState> states, String step);

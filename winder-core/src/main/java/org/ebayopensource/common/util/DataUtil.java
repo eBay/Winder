@@ -43,6 +43,7 @@ public class DataUtil {
      * Convert value to boolean
      *
      * @param value the object to convert from
+     * @param defValue default value
      * @return the converted boolean
      */
     public static boolean getBoolean(Object value, boolean defValue)
@@ -93,23 +94,26 @@ public class DataUtil {
 
     /**
      * String to Boolean
+     * 
+     * <pre>
+    *    True   --&gt;   TRUE         False  --&gt;   FALSE
+    *    true   --&gt;   TRUE         false  --&gt;   FALSE
+    *    TRUE   --&gt;   TRUE         FALSE  --&gt;   FALSE
+    *    Yes    --&gt;   TRUE         No     --&gt;   FALSE
+    *    yes    --&gt;   TRUE         no     --&gt;   FALSE
+    *    YES    --&gt;   TRUE         NO     --&gt;   FALSE
+    *    On     --&gt;   TRUE         Off    --&gt;   FALSE
+    *    on     --&gt;   TRUE         off    --&gt;   FALSE
+    *    ON     --&gt;   TRUE         OFF    --&gt;   FALSE
+    *    T      --&gt;   TRUE         F      --&gt;   FALSE
+    *    t      --&gt;   TRUE         f      --&gt;   FALSE
+    *    Y      --&gt;   TRUE         N      --&gt;   FALSE
+    *    y      --&gt;   TRUE         n      --&gt;   FALSE
+     * </pre>
      *
-     * @param value <pre>
-     *                                                                     True   -->   TRUE         False  -->   FALSE
-     *                                                                     true   -->   TRUE         false  -->   FALSE
-     *                                                                     TRUE   -->   TRUE         FALSE  -->   FALSE
-     *                                                                     Yes    -->   TRUE         No     -->   FALSE
-     *                                                                     yes    -->   TRUE         no     -->   FALSE
-     *                                                                     YES    -->   TRUE         NO     -->   FALSE
-     *                                                                     On     -->   TRUE         Off    -->   FALSE
-     *                                                                     on     -->   TRUE         off    -->   FALSE
-     *                                                                     ON     -->   TRUE         OFF    -->   FALSE
-     *                                                                     T      -->   TRUE         F      -->   FALSE
-     *                                                                     t      -->   TRUE         f      -->   FALSE
-     *                                                                     Y      -->   TRUE         N      -->   FALSE
-     *                                                                     y      -->   TRUE         n      -->   FALSE
-     *                                                                  </pre>
-     *
+     * @param value The string to be converted to boolean
+     * @param defValue Default value
+     * @return Boolean value
      */
     public static boolean toBoolean(String value, boolean defValue)
     {
@@ -131,22 +135,23 @@ public class DataUtil {
 
     /**
      * Convert string to boolean
-     *              <pre>
-     *                                                                     True   -->   TRUE         False  -->   FALSE
-     *                                                                     true   -->   TRUE         false  -->   FALSE
-     *                                                                     TRUE   -->   TRUE         FALSE  -->   FALSE
-     *                                                                     Yes    -->   TRUE         No     -->   FALSE
-     *                                                                     yes    -->   TRUE         no     -->   FALSE
-     *                                                                     YES    -->   TRUE         NO     -->   FALSE
-     *                                                                     On     -->   TRUE         Off    -->   FALSE
-     *                                                                     on     -->   TRUE         off    -->   FALSE
-     *                                                                     ON     -->   TRUE         OFF    -->   FALSE
-     *                                                                     T      -->   TRUE         F      -->   FALSE
-     *                                                                     t      -->   TRUE         f      -->   FALSE
-     *                                                                     Y      -->   TRUE         N      -->   FALSE
-     *                                                                     y      -->   TRUE         n      -->   FALSE
-     *                                                                  </pre>
-     *
+     * <pre>
+     *    True   --&gt;   TRUE         False  --&gt;   FALSE
+     *    true   --&gt;   TRUE         false  --&gt;   FALSE
+     *    TRUE   --&gt;   TRUE         FALSE  --&gt;   FALSE
+     *    Yes    --&gt;   TRUE         No     --&gt;   FALSE
+     *    yes    --&gt;   TRUE         no     --&gt;   FALSE
+     *    YES    --&gt;   TRUE         NO     --&gt;   FALSE
+     *    On     --&gt;   TRUE         Off    --&gt;   FALSE
+     *    on     --&gt;   TRUE         off    --&gt;   FALSE
+     *    ON     --&gt;   TRUE         OFF    --&gt;   FALSE
+     *    T      --&gt;   TRUE         F      --&gt;   FALSE
+     *    t      --&gt;   TRUE         f      --&gt;   FALSE
+     *    Y      --&gt;   TRUE         N      --&gt;   FALSE
+     *    y      --&gt;   TRUE         n      --&gt;   FALSE
+     * </pre>
+     * @param value String value
+     * @return If the string can be converted to boolean, it returns the correct boolean
      */
     public static boolean toBoolean(String value)
     {
@@ -224,6 +229,7 @@ public class DataUtil {
      * Convert value to double
      *
      * @param value the object to convert from
+     * @param defValue The default value
      * @return the converted double
      */
     public static double getDouble(Object value, double defValue)

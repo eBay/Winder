@@ -44,7 +44,7 @@ public @interface Repeatable {
     /**
      * Whether the step is repeatable or not
      *
-     * @return
+     * @return true or false
      */
     boolean value() default true;
 }

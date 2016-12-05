@@ -90,11 +90,11 @@ public interface Parameters<V> extends Map<String, V> {
     Parameters<V> getParameters(String key);
 
     /**
-     * Parsing the String value to List<String>.
+     * Parsing the String value to List&lt;String&gt;.
      * The string will be split by ",".
      *
      * @param key Key
-     * @return
+     * @return A list type of value
      */
     List<String> getList(String key);
 }

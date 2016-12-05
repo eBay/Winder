@@ -45,16 +45,17 @@ public interface WinderEngine {
 
     /**
      * Use default DateFormat to format
-     * @param date
-     * @return
+     *
+     * @param date Date
+     * @return formatted long date
      */
     String formatDate(Date date);
 
     /**
      * "yyyy-MM-dd"
      *
-     * @param date
-     * @return
+     * @param date format it to short date
+     * @return Formatted short date
      */
     String formatShortDate(Date date);
 
@@ -86,7 +87,7 @@ public interface WinderEngine {
      * Fast method
      *
      * @param jobClass Job class
-     * @throws WinderScheduleException
+     * @throws WinderScheduleException When data base exception
      */
     void scheduleJob(Class jobClass) throws WinderScheduleException;
 
@@ -94,7 +95,7 @@ public interface WinderEngine {
      * Fast method
      *
      * @param taskInput TaskInput
-     * @throws WinderScheduleException
+     * @throws WinderScheduleException When data base exception
      */
     <TI extends TaskInput> void scheduleJob(TI taskInput) throws WinderScheduleException;
 
@@ -115,7 +116,7 @@ public interface WinderEngine {
     /**
      * Step Registry
      *
-     * @return
+     * @return Current StepRegistry implementation
      */
     StepRegistry getStepRegistry();
 

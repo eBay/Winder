@@ -37,7 +37,7 @@ public interface TaskResult extends Parameters<Object> {
     /**
      * To Json
      *
-     * @return
+     * @return Convert the result to JSON
      */
     String toJson();
 }

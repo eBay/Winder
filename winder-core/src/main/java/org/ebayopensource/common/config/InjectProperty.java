@@ -42,7 +42,7 @@ public @interface InjectProperty {
     /**
      * Property type
      *
-     * @return
+     * @return Property type
      */
     String name();
 }

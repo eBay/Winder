@@ -41,14 +41,15 @@ public @interface TaskTimer {
     /**
      * Task type
      *
-     * @return
+     * @return Task Type
      */
     String name();
 
 
     /**
      * Task description, if it is empty, use type
-     * @return
+     *
+     * @return Description
      */
     String desc() default "";
 }

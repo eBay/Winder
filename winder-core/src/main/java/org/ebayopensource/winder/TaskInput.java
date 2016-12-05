@@ -93,7 +93,7 @@ public interface TaskInput extends Parameters<Object> {
     /**
      * If it is NULL, means start it immediately
      *
-     * @return
+     * @return Job start time
      */
     Date getJobStartTime();
 
@@ -101,7 +101,7 @@ public interface TaskInput extends Parameters<Object> {
     /**
      * To Json
      *
-     * @return
+     * @return Convert the input parameters to Json
      */
     String toJson();
 }
