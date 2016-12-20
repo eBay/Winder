@@ -1,0 +1,18 @@
+Winder Release Notes
+===========================
+
+0.3.0 Road Map
+
+* Large scale job scheduler. With quartz, the maximum job scheduling task in one second is around 300 trigger
+  even in a 20 instances quartz cluster + mysql.
+  Winder will target to rise this ceiling.
+
+0.2.0 Road Map
+
+* Internal crontab and scheduler support
+* Web management
+
+0.1.0
+
+* Multiple steps support for quartz job
+* Integration with quartz
