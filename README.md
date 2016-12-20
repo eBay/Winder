@@ -32,6 +32,8 @@ Production Use Cases: widely used in many distributed systems which eBay Cloud r
 
 # Releases
 
+<a href="https://github.com/eBay/Winder/blob/master/releases/release-notes.txt">Release Notes</a>
+
 &lt;dependency&gt;
 
 &nbsp;&nbsp;&lt;groupId>org.ebayopensource.winder&lt;/groupId&gt;
