@@ -33,9 +33,13 @@ Production Use Cases: widely used in many distributed systems which eBay Cloud r
 # Releases
 
 &lt;dependency&gt;
+
 &nbsp;&nbsp;&lt;groupId>org.ebayopensource.winder&lt;/groupId&gt;
+
 &nbsp;&nbsp;&lt;artifactId>winder-code&lt;/artifactId&gt;
+
 &nbsp;&nbsp;&lt;version>0.1.0&lt;/version&gt;
+
 &lt;/dependency&gt;
 
 
