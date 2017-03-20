@@ -59,7 +59,7 @@ public interface QuartzWinderConstants {
     String KEY_ALERT_STATUS_CREATED = "created";
     String KEY_ALERT_STATUS_MESSAGE = "alertmessage";
     String KEY_ALERT_STATUS_ACTION_TRIGGERED = "action";
-    String KEY_ALERT_STATUS_USER_TRIGGERED = "user";
+    String KEY_ALERT_STATUS_USER_TRIGGERED = "owner";
 
     String KEY_CHILDJOBS = "@jobchildren";
     String KEY_JOBPARENT = "@jobparent";

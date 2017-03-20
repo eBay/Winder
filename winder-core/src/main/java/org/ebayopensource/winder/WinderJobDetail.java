@@ -111,14 +111,14 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> {
     TR getResult();
 
     /**
-     * Return all user actions
+     * Return all owner actions
      *
-     * @return all user actions, if there is no UserAction, it returns Collections.EMPTY_LIST
+     * @return all owner actions, if there is no UserAction, it returns Collections.EMPTY_LIST
      */
     List<UserAction> getUserActions();
 
     /**
-     * Add new user action
+     * Add new owner action
      *
      * @param type UserActionType
      * @param message Messgae

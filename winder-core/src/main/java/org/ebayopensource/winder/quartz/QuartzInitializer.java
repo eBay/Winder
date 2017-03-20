@@ -115,7 +115,7 @@ public class QuartzInitializer {
                         hostName = "unknownHost";
                     }
                     jdbcJobStore.setInstanceId(hostName);
-                    jdbcJobStore.setDriverDelegateClass("org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
+                    jdbcJobStore.setDriverDelegateClass("org.ebayopensource.winder.quartz.WinderJDBCDelegate");
                     jdbcJobStore.setThreadPoolSize(poolSize);
 
                     // To fix the quartz misfire issue

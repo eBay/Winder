@@ -328,7 +328,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         // Cases																message
         // 1. regular Resume											""
         // 2. Resume with awaitingforAction								""
-        // 3. Cancel(by user) with awaitingForAction(during paused)		""
+        // 3. Cancel(by owner) with awaitingForAction(during paused)		""
         // 4. Cancel(by LOM) with awaitingForAction(during paused)		"someMessage"
         // 5. Regular Cancel(during paused)								""
 
@@ -436,6 +436,11 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
             }
         }
         return true;
+    }
+
+    @Override
+    public List<WinderJobDetail> listJobDetails(JobListFilter filter) throws WinderScheduleException {
+        return null;
     }
 
 

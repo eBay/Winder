@@ -9,10 +9,10 @@
         <version>0.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>winder-examples</artifactId>
-    <name>winder-examples</name>
+    <artifactId>winder-service</artifactId>
+    <name>winder-service</name>
     <url>https://github.com/eBay/Winder/tree/master/winder-core</url>
-    <description>Core module</description>
+    <description>Service module</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

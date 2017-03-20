@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2016 eBay Software Foundation. All rights reserved.
- *
+ * <p>
  * Licensed under the MIT license.
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *
+ * <p>
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,31 +24,12 @@
  */
 package org.ebayopensource.winder;
 
-import java.util.Date;
-
 /**
- * User action,
+ * Detail Level
  *
- * User may need to interact the job, for example, pause, cancel, resume etc.
- *
- * @author Sheldon Shao xshao@ebay.com on 10/12/16.
+ * @author Sheldon Shao xshao@ebay.com on 3/19/17.
  * @version 1.0
  */
-public interface UserAction {
-
-    Date getDateCreated();
-
-    String getDateCreatedAsString();
-
-    String getMessage();
-
-//    void setMessage(String message);
-
-    String getUser();
-
-//    void setUser(String owner);
-
-    UserActionType getType();
-
-//    void setType(InteractionType type);
+public enum DetailLevel {
+    UNKNOWN, SUMMARY, DETAIL
 }

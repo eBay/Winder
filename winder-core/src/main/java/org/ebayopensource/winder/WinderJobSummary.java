@@ -47,14 +47,14 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
     JobId[] getChildJobIds();
 
     /**
-     * Return all user actions
+     * Return all owner actions
      *
-     * @return all user actions, if there is no UserAction, it returns Collections.EMPTY_LIST
+     * @return all owner actions, if there is no UserAction, it returns Collections.EMPTY_LIST
      */
     List<UserAction> getUserActions();
 
     /**
-     * Add new user action
+     * Add new owner action
      */
     UserAction addUserAction(UserActionType type, String message, String owner);
 

@@ -70,4 +70,14 @@ public interface WinderSchedulerManager<TI extends TaskInput> {
     void markCancelInProgress(JobId jobId, String message, String user) throws WinderScheduleException;
 
     boolean successChildJob(List<WinderJobDetail> childJobStatusDetails);
+
+    /**
+     * List job details by filter
+     *
+     * @param filter List Job filter
+     * @return List for Job Details
+     * @throws WinderScheduleException
+     */
+    List<WinderJobDetail> listJobDetails(JobListFilter filter) throws WinderScheduleException;
+
 }
