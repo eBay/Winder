@@ -24,12 +24,13 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.WinderEngine;
-import org.quartz.JobDataMap;
 
 import java.util.Date;
 
 /**
+ * Base Status
  *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
@@ -40,54 +41,37 @@ public abstract class QuartzStatusBase<S extends Enum> {
 
     protected WinderEngine engine;
 
-    protected JobDataMap jobDataMap;
-
-    protected String id;
+    protected Parameters<Object> parameters;
 
     protected int maxMessages;
 
-    public QuartzStatusBase(WinderEngine engine, JobDataMap jobDataMap, String id) {
+    public QuartzStatusBase(WinderEngine engine, Parameters<Object> parameters) {
         this.engine = engine;
-        this.jobDataMap = jobDataMap;
-        this.id = id;
-        String key = genKey(getKeyDateCreated());
-        if (!jobDataMap.containsKey(key)) {
-            dateCreated = new Date();
-            jobDataMap.put(key, dateCreated.getTime());
-        }
+        this.parameters = parameters;
+        getDateCreated();
         this.maxMessages = engine.getConfiguration().getInt("winder.task.maxMessage", 1000);
-    }
-
-    protected abstract String getKeyDateCreated();
-
-    protected abstract String getKeyMessage();
-
-    protected abstract String getKeyStatus();
-
-    protected String genKey(String key) {
-        return QuartzJobUtil.generateKeyName(id, key);
     }
 
     public Date getDateCreated() {
         if (dateCreated == null) {
-            dateCreated = engine.parseDateFromObject(jobDataMap.get(genKey(getKeyDateCreated())));
+            dateCreated = parameters.getDate(QuartzWinderConstants.KEY_DATE_CREATED);
+            if (dateCreated == null) {
+                dateCreated = new Date();
+                parameters.put(QuartzWinderConstants.KEY_DATE_CREATED, dateCreated.getTime());
+            }
         }
         return dateCreated;
     }
 
     public String getMessage() {
-        return jobDataMap.getString(genKey(getKeyMessage()));
+        return parameters.getString(QuartzWinderConstants.KEY_MESSAGE);
     }
 
-    protected S getStatus(Class<S> clazz) {
-        String key = genKey(getKeyStatus());
-        String value = jobDataMap.getString(key);
-        if (value != null) {
-            try {
-                return (S)Enum.valueOf(clazz, value.toUpperCase());
-            } catch (Exception ex) {
-            }
-        }
-        return (S)Enum.valueOf(clazz, "UNKNOWN");
+    public void setMessage(String message) {
+        parameters.put(QuartzWinderConstants.KEY_MESSAGE, message);
+    }
+
+    public Parameters<Object> toParameters() {
+        return parameters;
     }
 }

@@ -24,6 +24,7 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.UserAction;
 import org.ebayopensource.winder.UserActionType;
 import org.ebayopensource.winder.WinderEngine;
@@ -33,52 +34,35 @@ import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
 
 /**
+ * User Action
+ *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
  */
 public class QuartzUserAction extends QuartzStatusBase<UserActionType> implements UserAction {
 
-    public QuartzUserAction(WinderEngine engine, JobDataMap jobDataMap, String id) {
-        super(engine, jobDataMap, id);
+    public QuartzUserAction(WinderEngine engine, Parameters<Object> parameters) {
+        super(engine, parameters);
     }
 
-
-    public QuartzUserAction(WinderEngine engine, JobDataMap jobDataMap, String id, UserActionType actionType, String message,
+    public QuartzUserAction(WinderEngine engine, Parameters<Object> parameters, UserActionType actionType, String message,
                             String owner) {
-        super(engine, jobDataMap, id);
+        super(engine, parameters);
 
-        String key = getKeyStatus();
-        jobDataMap.put(key, actionType.name());
+        parameters.put(KEY_ACTION, actionType.name());
 
-        key = getKeyMessage();
-        jobDataMap.put(key, QuartzJobUtil.formatString(message, maxMessages, true));
+        setMessage(QuartzJobUtil.formatString(message, maxMessages, true));
 
-        key = genKey(KEY_ALERT_STATUS_USER_TRIGGERED);
-        jobDataMap.put(key, owner);
+        parameters.put(KEY_OWNER, owner);
     }
 
     @Override
     public String getUser() {
-        return jobDataMap.getString(genKey(KEY_ALERT_STATUS_USER_TRIGGERED));
+        return parameters.getString(KEY_OWNER);
     }
 
     @Override
     public UserActionType getType() {
-        return getStatus(UserActionType.class);
-    }
-
-    @Override
-    protected String getKeyDateCreated() {
-        return KEY_ALERT_STATUS_CREATED;
-    }
-
-    @Override
-    protected String getKeyMessage() {
-        return KEY_ALERT_STATUS_MESSAGE;
-    }
-
-    @Override
-    protected String getKeyStatus() {
-        return KEY_ALERT_STATUS_ACTION_TRIGGERED;
+        return parameters.getEnum(UserActionType.class, KEY_ACTION);
     }
 }

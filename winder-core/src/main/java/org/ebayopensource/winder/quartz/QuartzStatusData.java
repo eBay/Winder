@@ -27,14 +27,11 @@ package org.ebayopensource.winder.quartz;
 import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
-import org.ebayopensource.winder.util.JsonUtil;
-import org.quartz.JobDataMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
@@ -46,153 +43,141 @@ import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
  */
 public class QuartzStatusData implements TaskStatusData {
 
-    private String id;
-
-    private JobDataMap map;
+    private Parameters<Object> parameters;
 
     private WinderEngine engine;
 
-    private static Logger log = LoggerFactory.getLogger(QuartzStatusData.class);
-
-    private int maxTaskResult = 0;
-
-    private final String updateNamespace;
-
-    public QuartzStatusData(WinderEngine engine, String id, JobDataMap map) {
+    public QuartzStatusData(WinderEngine engine, Parameters<Object> parameters) {
         this.engine = engine;
-        this.id = id;
-        this.map = map;
-        WinderConfiguration configuration = engine.getConfiguration();
+        this.parameters = parameters;
+    }
 
-        this.maxTaskResult = configuration.getInt("winder.task.maxTaskResult", 0);
-        this.updateNamespace = QuartzJobUtil.generateKeyName(KEY_TASKS, QuartzJobUtil.generateKeyName(id, KEY_STATUSES));
+    public void setId(String id) {
+        parameters.put(KEY_TASK_ID, id);
     }
 
     @Override
     public String getId() {
-        return id;
+        return parameters.getString(KEY_TASK_ID);
     }
 
     @Override
     public String getName() {
-        return map.getString(String.format(KEY_TASK_NAME, id));
+        return parameters.getString(KEY_TASK_NAME);
     }
 
     public void setName(String name) {
-        map.put(String.format(KEY_TASK_NAME, id), name);
+        parameters.put(KEY_TASK_NAME, name);
     }
 
     @Override
     public Date getDateCreated() {
-        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_CREATED, id)));
+        return parameters.getDate(KEY_TASK_CREATED);
     }
 
     public void setDateCreated(Date created) {
-        map.put(String.format(KEY_TASK_CREATED, id), created.getTime());
+        parameters.put(KEY_TASK_CREATED, created.getTime());
     }
 
     @Override
     public Date getStartTime() {
-        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_STARTTIME, id)));
+        return parameters.getDate(KEY_TASK_START_TIME);
     }
 
     @Override
     public void setStartTime(Date startTime) {
-        map.put(String.format(KEY_TASK_STARTTIME, id), startTime.getTime());
+        parameters.put(KEY_TASK_START_TIME, startTime.getTime());
     }
 
     @Override
     public Date getEndTime() {
-        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_ENDTIME, id)));
+        return parameters.getDate(KEY_TASK_END_TIME);
     }
 
     @Override
     public void setEndTime(Date endTime) {
-        map.put(String.format(KEY_TASK_ENDTIME, id), endTime.getTime());
+        parameters.put(KEY_TASK_END_TIME, endTime.getTime());
     }
 
     @Override
     public StatusEnum getExecutionStatus() {
-        StatusEnum result = StatusEnum.UNKNOWN;
-        String text = map.getString(String.format(KEY_TASK_STATUS, id));
-        if (text != null && !text.isEmpty()) {
-            try {
-                result = StatusEnum.valueOf(text);
-            } catch (RuntimeException e) {
-                log.error("Error parsing execution status from " + text, e);
-            }
-        }
-        return result;
+        return parameters.getEnum(StatusEnum.class, KEY_TASK_STATUS, StatusEnum.UNKNOWN);
     }
 
     @Override
     public void setExecutionStatus(StatusEnum executionStatus) {
-        map.put(String.format(KEY_TASK_STATUS, id), executionStatus.name());
+        parameters.put(KEY_TASK_STATUS, executionStatus.name());
     }
 
     @Override
     public String getSessionId() {
-        return map.getString(String.format(KEY_TASK_SESSION_ID, id));
+        return parameters.getString(KEY_TASK_SESSION_ID);
     }
 
     @Override
     public void setSessionId(String sessionId) {
-        map.put(String.format(KEY_TASK_SESSION_ID, id), sessionId);
+        parameters.put(KEY_TASK_SESSION_ID, sessionId);
     }
 
     @Override
     public String getTarget() {
-        return map.getString(String.format(KEY_TASK_TARGET, id));
+        return parameters.getString(KEY_TASK_TARGET);
     }
 
     @Override
     public void setTarget(String target) {
-        map.put(String.format(KEY_TASK_TARGET, id), target);
+        parameters.put(KEY_TASK_TARGET, target);
     }
 
     @Override
     public String getAction() {
-        return map.getString(String.format(KEY_TASK_ACTION, id));
+        return parameters.getString(KEY_TASK_ACTION);
     }
 
     @Override
     public void setAction(String action) {
-        map.put(String.format(KEY_TASK_ACTION, id), action);
+        parameters.put(KEY_TASK_ACTION, action);
     }
 
     @Override
     public Parameters<Object> getResult() {
-        String text = map.getString(String.format(KEY_TASK_RESULT, id));
-        try {
-            return JsonUtil.jsonToParameters(text);
-        } catch (IOException e) {
-            log.error("Error parsing execution status from " + text, e);
-            return new ParametersMap<>();
-        }
+        return parameters.getParameters(KEY_TASK_RESULT);
     }
 
     @Override
     public void setResult(Parameters<Object> result) {
-        String str = null;
-        try {
-            str = JsonUtil.writeValueAsString(result);
-        } catch (IOException e) {
-            log.error("Convert value as string error " + result, e);
+        parameters.put(KEY_TASK_RESULT, result.toMap());
+    }
+
+    protected List<Map> getListOfMap(String key) {
+        List<Map> list = parameters.getList(key);
+        if (list == null) {
+            list = new ArrayList<>(5);
+            parameters.put(key, list);
         }
-        if (str != null && maxTaskResult > 0 && str.length() > maxTaskResult) {
-            throw new IllegalArgumentException("Task result map exceeds max (" +
-                    maxTaskResult + "), internal code error");
-        }
-        map.put(String.format(KEY_TASK_RESULT, id), str);
+        return list;
     }
 
     @Override
     public StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage) {
-        return QuartzJobUtil.addOrGetUpdate(engine, updateNamespace, map, executionStatus, statusMessage);
+        QuartzStatusUpdate update = new QuartzStatusUpdate(engine, new ParametersMap<>(),
+                executionStatus, statusMessage);
+
+        getListOfMap(DATA_STATUS_UPDATES).add(update.toParameters().toMap());
+        return update;
     }
 
     @Override
     public List<StatusUpdate> getUpdates() {
-        return QuartzJobUtil.getAllStatus(QuartzStatusUpdate.class, engine, updateNamespace, map);
+        List<Map> list = getListOfMap(DATA_STATUS_UPDATES);
+        List<StatusUpdate> statusUpdates = new ArrayList<>(list.size());
+        for(Map m: list) {
+            statusUpdates.add(new QuartzStatusUpdate(engine, new ParametersMap<>(m)));
+        }
+        return statusUpdates;
+    }
+
+    public Map<String, Object> toMap() {
+        return parameters.toMap();
     }
 }

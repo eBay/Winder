@@ -51,7 +51,7 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
             TaskInput input = ctx.getTaskInput();
             TaskResult result = ctx.getTaskResult();
 
-            List<String> fqdns = input.getList("targets");
+            List<String> fqdns = input.getStringList("targets");
             List<InstanceState> instances = deploymentAPI.preCheck(fqdns);
             result.put("instances", instances);
             ctx.setCurrentStep(DOWNLOAD);

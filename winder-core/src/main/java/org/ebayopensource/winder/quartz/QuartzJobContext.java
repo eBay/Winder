@@ -29,8 +29,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 
+import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.*;
-import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.Trigger;
@@ -57,7 +57,7 @@ public class QuartzJobContext implements WinderJobContext {
     private int initStep = 0;
     private int maxStep = 100000;
 
-    private final JobDataMap map;
+    private final Parameters<Object> objectParameters;
 
     public QuartzJobContext(WinderEngine winderEngine, JobExecutionContext qctx) {
         this.winderEngine = winderEngine;
@@ -78,7 +78,7 @@ public class QuartzJobContext implements WinderJobContext {
         initStep = configuration.getInt("winder_steps_init_step", 0);
         maxStep = configuration.getInt("winder_steps_max_step", 100000);
 
-        map = jobDetail.getJobDataMap();
+        objectParameters = jobDetail.getDataParameters();
     }
 
     public <TI extends TaskInput, TR extends TaskResult>  WinderJobDetail<TI, TR> getJobDetail() {
@@ -100,32 +100,16 @@ public class QuartzJobContext implements WinderJobContext {
 
     @Override
     public int getJobStep() {
-        String jobStep = map.getString(KEY_JOB_STEP);
-        if (jobStep == null) { //For eBay code backward compatible
-            jobStep = map.getString(KEY_JOB_STAGE);
+        int jobStep = objectParameters.getInt(KEY_JOB_STEP, -1);
+        if (jobStep != -1 && (jobStep < initStep || jobStep > maxStep)) {
+            throw new IllegalArgumentException("bad job step " + jobStep);
         }
-
-        int result = -1;
-        if (jobStep != null) {
-            try {
-                result = Integer.parseInt(jobStep);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("bad job step " + jobStep, e);
-            }
-            if (result != -1 && (result < initStep || result > maxStep)) {
-                throw new IllegalArgumentException("bad job step " + result);
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), result));
-            }
-        }
-        return result;
+        return jobStep;
     }
 
     @Override
     public void setJobStep(int step) {
-        map.put(KEY_JOB_STEP, String.valueOf(step));
+        objectParameters.put(KEY_JOB_STEP, step);
     }
 
 
@@ -134,15 +118,12 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public String getStatusMessage() {
-        String result = jobDetail.getJobDataMap().getString(KEY_JOB_STATUS_MSG);
-        return (result == null) ? "" : result;
+        return objectParameters.getString(KEY_JOB_STATUS_MSG, "");
     }
 
     public void setStatusMessage(String msg) {
-        String nmsg = (msg == null) ? "" : msg;
-        jobDetail.getJobDataMap().put(KEY_JOB_STATUS_MSG, nmsg);
+        objectParameters.put(KEY_JOB_STATUS_MSG, (msg == null) ? "" : msg);
     }
-
 
     public void setStatusMessage(String msg, Throwable t) {
         if (t != null) {
@@ -160,11 +141,11 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public boolean isAwaitingForAction(boolean isAwaiting) {
-        return jobDetail.getJobDataMap().getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
+        return objectParameters.getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
     }
 
     public void setAwaitingForAction(boolean isAwaiting) {
-        jobDetail.getJobDataMap().put(KEY_JOB_IS_AWAITING_FOR_ACTION, isAwaiting);
+        objectParameters.put(KEY_JOB_IS_AWAITING_FOR_ACTION, isAwaiting);
     }
 
 //    public void setComplete() {
@@ -181,7 +162,7 @@ public class QuartzJobContext implements WinderJobContext {
 
     public void done(StatusEnum status) {
         if (status != StatusEnum.UNKNOWN) {
-            jobDetail.getJobDataMap().put(KEY_JOB_STATUS, String.valueOf(status));
+            objectParameters.put(KEY_JOB_STATUS, String.valueOf(status));
         }
         Date endDate = new Date();
         jobDetail.setEndTime(endDate);
@@ -208,7 +189,7 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public StatusEnum getJobStatus() {
-        String statusName = jobDetail.getJobDataMap().getString(KEY_JOB_STATUS);
+        String statusName = objectParameters.getString(KEY_JOB_STATUS);
         if (statusName == null) {
             return StatusEnum.UNKNOWN;
         }
@@ -222,7 +203,7 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public void setJobStatus(StatusEnum status) {
-        jobDetail.getJobDataMap().put(KEY_JOB_STATUS,status.name());
+        objectParameters.put(KEY_JOB_STATUS,status.name());
     }
 
 

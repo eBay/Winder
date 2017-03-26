@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.common.util.Parameters;
+
 import java.util.Date;
 
 /**
@@ -39,4 +41,6 @@ public interface StatusUpdate {
     String getMessage();
 
     StatusEnum getStatus();
+
+    Parameters<Object> toParameters();
 }

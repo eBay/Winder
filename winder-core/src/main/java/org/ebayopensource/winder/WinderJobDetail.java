@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.common.util.Parameters;
+
 import java.util.Date;
 import java.util.List;
 
@@ -120,6 +122,13 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
     TR getResult();
 
     /**
+     * Return jobData as Parameters
+     *
+     * @return jobData as Parameters
+     */
+    Parameters<Object> getDataParameters();
+
+    /**
      * Return all owner actions
      *
      * @return all owner actions, if there is no UserAction, it returns Collections.EMPTY_LIST
@@ -141,7 +150,7 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
      * @param userAction User Action
      * @return
      */
-    UserAction addUserAction(UserAction userAction);
+    void addUserAction(UserAction userAction);
 
     /**
      * Is the job waiting for User Action

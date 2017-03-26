@@ -24,10 +24,10 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.StatusEnum;
 import org.ebayopensource.winder.StatusUpdate;
 import org.ebayopensource.winder.WinderEngine;
-import org.quartz.JobDataMap;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
@@ -39,37 +39,21 @@ import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
  */
 public class QuartzStatusUpdate extends QuartzStatusBase<StatusEnum> implements StatusUpdate {
 
-    public QuartzStatusUpdate(WinderEngine engine, JobDataMap jobDataMap, String id, StatusEnum statusEnum, String message) {
-        this(engine, jobDataMap, id);
 
-        String key = genKey(KEY_STATUS_UPDATE_EXECUTION_STATUS);
-        jobDataMap.put(key, statusEnum.name());
-
-        key = genKey(KEY_STATUS_UPDATE_MESSAGE);
-        jobDataMap.put(key, QuartzJobUtil.formatString(message, maxMessages, true));
+    public QuartzStatusUpdate(WinderEngine engine, Parameters<Object> parameters) {
+        super(engine, parameters);
     }
 
-    public QuartzStatusUpdate(WinderEngine engine, JobDataMap jobDataMap, String id) {
-        super(engine, jobDataMap, id);
-    }
+    public QuartzStatusUpdate(WinderEngine engine, Parameters<Object> parameters, StatusEnum statusEnum, String message) {
+        this(engine, parameters);
 
-    @Override
-    protected String getKeyDateCreated() {
-        return KEY_STATUS_UPDATE_CREATED;
-    }
+        parameters.put(KEY_EXECUTION_STATUS, statusEnum.name());
 
-    @Override
-    protected String getKeyMessage() {
-        return KEY_STATUS_UPDATE_MESSAGE;
-    }
-
-    @Override
-    protected String getKeyStatus() {
-        return KEY_STATUS_UPDATE_EXECUTION_STATUS;
+        setMessage(QuartzJobUtil.formatString(message, maxMessages, true));
     }
 
     @Override
     public StatusEnum getStatus() {
-        return super.getStatus(StatusEnum.class);
+        return parameters.getEnum(StatusEnum.class, KEY_EXECUTION_STATUS);
     }
 }

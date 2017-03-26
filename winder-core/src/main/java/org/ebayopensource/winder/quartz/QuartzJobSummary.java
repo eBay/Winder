@@ -25,9 +25,10 @@
 package org.ebayopensource.winder.quartz;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ebayopensource.common.util.Parameters;
+import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
 import org.ebayopensource.winder.util.JsonUtil;
-import org.quartz.JobDataMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
@@ -50,7 +52,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     private WinderEngine engine;
     private JobId jobId;
-    private JobDataMap jobDataMap;
+    private Parameters<Object> dataAsParameters;
 
     private TI taskInput;
     private TR taskResult;
@@ -59,20 +61,20 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     private final int maxStack;
 
-    public QuartzJobSummary(WinderEngine engine, JobId jobId, JobDataMap jobDataMap) {
+    public QuartzJobSummary(WinderEngine engine, JobId jobId, Parameters<Object> dataAsParameters) {
         this.engine = engine;
         this.jobId = jobId;
-        this.jobDataMap = jobDataMap;
+        this.dataAsParameters = dataAsParameters;
         this.maxStack = engine.getConfiguration().getInt("winder.job.maxStack", 512);
     }
 
     void setParentJobId(QuartzJobId parentId) {
-        jobDataMap.put(KEY_JOBPARENT, parentId.toString());
+        dataAsParameters.put(KEY_JOB_PARENT, parentId.toString());
     }
 
     @Override
     public JobId getParentJobId() {
-        String parentIdStr = jobDataMap.getString(KEY_JOBPARENT);
+        String parentIdStr = dataAsParameters.getString(KEY_JOB_PARENT);
         if (parentIdStr == null) {
             return null;
         }
@@ -80,48 +82,68 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     }
 
     void setParentJobId(JobId parentJobId) {
-        jobDataMap.put(KEY_JOBPARENT, parentJobId.toString());
+        dataAsParameters.put(KEY_JOB_PARENT, parentJobId.toString());
     }
 
 
     @Override
     public JobId[] getChildJobIds() {
-        String childText = jobDataMap.getString(KEY_CHILDJOBS);
-        if (childText == null) {
+        List<String> ids = dataAsParameters.getStringList(KEY_CHILD_JOBS);
+        if (ids == null || ids.size() == 0) {
             return new JobId[0];
         }
 
-        String[] ids;
-        try {
-            ids = JsonUtil.readValue(childText, String[].class);
-        } catch (IOException e) {
-            log.warn("Invalid child jobs ids:" + childText, e);
-            return new JobId[0];
-        }
-        JobId[] result = new JobId[ids.length];
-        for (int i = 0; i < ids.length; i++) {
-            result[i] = QuartzJobId.createFromString(ids[i], jobId.getCluster());
+        JobId[] result = new JobId[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            result[i] = QuartzJobId.createFromString(ids.get(i), jobId.getCluster());
         }
         return result;
     }
 
     @Override
     public List<UserAction> getUserActions() {
-        return QuartzJobUtil.getAllStatus(QuartzStatusUpdate.class, engine, JOB_ALERT_STATUS_PREFIX, jobDataMap);
+        List<Map> list = getListOfMap(KEY_USER_ACTIONS);
+        List<UserAction> userActions = new ArrayList<>(list.size());
+        for(Map m: list) {
+            userActions.add(new QuartzUserAction(engine, new ParametersMap<>(m)));
+        }
+        return userActions;
+    }
+
+    protected List<Map> getListOfMap(String key) {
+        List<Map> list = dataAsParameters.getList(key);
+        if (list == null) {
+            list = new ArrayList<>(5);
+            dataAsParameters.put(key, list);
+        }
+        return list;
     }
 
     @Override
     public UserAction addUserAction(UserActionType type, String message, String owner) {
-        return QuartzJobUtil.addUserAction(engine, jobDataMap, type, message, owner);
+        QuartzUserAction userAction = new QuartzUserAction(engine, new ParametersMap<>(),
+                type, message, owner);
+        addUserAction(userAction);
+        return userAction;
+    }
+
+    /**
+     * Add new owner action
+     */
+    public void addUserAction(UserAction userAction) {
+        getListOfMap(KEY_USER_ACTIONS).add(userAction.toParameters().toMap());
     }
 
     @Override
     public StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage) {
-        return QuartzJobUtil.addOrGetUpdate(engine, JOB_STATUS_UPDATE_PREFIX, jobDataMap, executionStatus, statusMessage);
+        QuartzStatusUpdate update = new QuartzStatusUpdate(engine, new ParametersMap<>(),
+                executionStatus, statusMessage);
+
+        getListOfMap(KEY_STATUS_UPDATES).add(update.toParameters().toMap());
+        return update;
     }
 
     public StatusUpdate addUpdate(StatusEnum status, String message, Throwable ex) {
-
         if ((ex != null) && !(ex instanceof IllegalArgumentException)) {
             StringBuilder buf = new StringBuilder();
             buf.append(message);
@@ -141,7 +163,12 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public List<StatusUpdate> getUpdates() {
-        return QuartzJobUtil.getAllStatus(QuartzStatusUpdate.class, engine, JOB_STATUS_UPDATE_PREFIX, jobDataMap);
+        List<Map> list = getListOfMap(KEY_STATUS_UPDATES);
+        List<StatusUpdate> statusUpdates = new ArrayList<>(list.size());
+        for(Map m: list) {
+            statusUpdates.add(new QuartzStatusUpdate(engine, new ParametersMap<>(m)));
+        }
+        return statusUpdates;
     }
 
     /**
@@ -150,19 +177,11 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
      * @param jobId
      */
     public void addChildJobIds(JobId jobId) {
-        String childText = jobDataMap.getString(KEY_CHILDJOBS);
+        List<String> ids = dataAsParameters.getStringList(KEY_CHILD_JOBS);
 
-        List<String> ids;
-
-        if (childText == null) {
+        if (ids == null) {
             ids = new ArrayList<>(1);
         } else {
-            try {
-                ids = JsonUtil.readValue(childText, ArrayList.class);
-            } catch (IOException e) {
-                log.warn("Convert json to array error:" + childText, e);
-                ids = new ArrayList<>(1);
-            }
             int overflow = ids.size() - MAX_CHILD_JOB_SIZE;
             if (overflow >= 0) {
                 for (int i = overflow; i >= 0; i--) {
@@ -185,43 +204,35 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     }
 
     private void setChildJobIds(List<String> ids) {
-        try {
-            jobDataMap.put(KEY_CHILDJOBS, JsonUtil.writeValueAsString(ids));
-        } catch (IOException e) {
-            log.warn("Convert object to json error:" + ids, e);
-        }
+        dataAsParameters.put(KEY_CHILD_JOBS, ids);
     }
 
     @Override
     public String getTarget() {
-        return jobDataMap.getString(KEY_JOB_TARGET);
+        return dataAsParameters.getString(KEY_JOB_TARGET);
     }
 
     @Override
     public void setTarget(String target) {
-        jobDataMap.put(KEY_JOB_TARGET, target);
+        dataAsParameters.put(KEY_JOB_TARGET, target);
     }
 
     @Override
     public String getAction() {
-        return jobDataMap.getString(KEY_JOB_ACTION);
+        return dataAsParameters.getString(KEY_JOB_ACTION);
     }
 
     @Override
     public void setAction(String action) {
-        jobDataMap.put(KEY_JOB_ACTION, action);
+        dataAsParameters.put(KEY_JOB_ACTION, action);
     }
 
     @Override
     public TR getTaskResult() {
         if (taskResult == null) {
-            String resultText = jobDataMap.getString(KEY_JOB_RESULT);
-            if (resultText != null) {
-                try {
-                    taskResult = (TR) new WinderTaskResult(JsonUtil.jsonToParameters(resultText));
-                } catch (IOException e) {
-                    log.warn("Parsing task result error:" + resultText, e);
-                }
+            Parameters<Object> result = dataAsParameters.getParameters(KEY_JOB_RESULT);
+            if (result != null) {
+                taskResult = (TR) new WinderTaskResult(result);
             }
             else {
                 taskResult = (TR)new WinderTaskResult();
@@ -233,22 +244,21 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public void setTaskResult(TR result) {
         this.taskResult = result;
-        jobDataMap.put(KEY_JOB_RESULT, result.toJson());
+        dataAsParameters.put(KEY_JOB_RESULT, result.toMap());
     }
 
     @Override
     public TI getTaskInput() {
         if (taskInput == null) {
-            String inputTxt = jobDataMap.getString(KEY_JOB_INPUT);
-            String jobClass = jobDataMap.getString(KEY_JOB_CLASS);
+            Parameters<Object> input = dataAsParameters.getParameters(KEY_JOB_INPUT);
+            String jobClass = dataAsParameters.getString(KEY_JOB_CLASS);
             try {
-                WinderTaskInput ti = new WinderTaskInput(JsonUtil.jsonToParameters(inputTxt));
+                WinderTaskInput ti = new WinderTaskInput(input != null ? input : new ParametersMap<>());
                 ti.setJobOwner(getOwner());
                 ti.setJobClass(Class.forName(jobClass));
                 taskInput = (TI)ti;
-            } catch (IOException e) {
-                log.warn("Parsing task input error:" + inputTxt, e);
-            } catch (ClassNotFoundException e) {
+            }
+            catch (ClassNotFoundException e) {
                 log.error("Job class not found:" + jobClass, e);
             }
         }
@@ -258,59 +268,42 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public void setTaskInput(TI taskInput) {
         this.taskInput = taskInput;
-        jobDataMap.put(KEY_JOB_INPUT, taskInput.toJson());
+        dataAsParameters.put(KEY_JOB_INPUT, taskInput.toJson());
     }
 
     @Override
     public String getOwner() {
-        return jobDataMap.getString(KEY_JOB_OWNER);
+        return dataAsParameters.getString(KEY_JOB_OWNER);
     }
 
-    private List<String> getTaskIds() {
-        String text = jobDataMap.getString(KEY_TASKS);
-        if (!StringUtils.isBlank(text)) {
-            try {
-                return JsonUtil.readValue(text, ArrayList.class);
-            } catch (IOException e) {
-                log.warn("Parsing task ids error:" + text, e);
-            }
-        }
-        return new ArrayList<>(1);
-    }
     @Override
     public TaskStatusData addTaskStatus(String taskId, String taskName) {
-        List<String> taskIds = getTaskIds();
-        taskIds.add(taskId);
-        //Low performance
-        try {
-            jobDataMap.put(KEY_TASKS, JsonUtil.writeValueAsString(taskIds));
-        } catch (IOException e) {
-            throw new IllegalStateException("Json exception" + taskIds);
-        }
-
-        QuartzStatusData statusData = new QuartzStatusData(engine, taskId, jobDataMap);
+        List<Map> list = getListOfMap(KEY_TASKS);
+        ParametersMap map = new ParametersMap();
+        QuartzStatusData statusData = new QuartzStatusData(engine, map);
+        statusData.setId(taskId);
         statusData.setName(taskName);
         statusData.setDateCreated(new Date());
+        list.add(statusData.toMap());
         return statusData;
     }
 
-    @Override
-    public TaskStatusData getTaskStatus(String taskId) {
-        List<String> taskIds = getTaskIds();
-        if (!taskIds.contains(taskId)) {
-            return null;
-        }
-        return new QuartzStatusData(engine, taskId, jobDataMap);
-    }
+//    @Override
+//    public TaskStatusData getTaskStatus(String taskId) {
+//        List<String> taskIds = getTaskIds();
+//        if (!taskIds.contains(taskId)) {
+//            return null;
+//        }
+//        return new QuartzStatusData(engine, taskId, dataAsParameters);
+//    }
 
     @Override
     public List<TaskStatusData> getAllTaskStatuses() {
-        List<String> taskIds = getTaskIds();
-        List<TaskStatusData> result = new ArrayList<>(taskIds.size());
-
-        for (String taskId : taskIds) {
-            result.add(new QuartzStatusData(engine, taskId, jobDataMap));
+        List<Map> list = getListOfMap(KEY_TASKS);
+        List<TaskStatusData> statusDatas = new ArrayList<>(list.size());
+        for(Map m: list) {
+            statusDatas.add(new QuartzStatusData(engine, new ParametersMap<>(m)));
         }
-        return result;
+        return statusDatas;
     }
 }

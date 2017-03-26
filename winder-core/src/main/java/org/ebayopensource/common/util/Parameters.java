@@ -27,6 +27,7 @@ package org.ebayopensource.common.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -96,5 +97,49 @@ public interface Parameters<V> extends Map<String, V> {
      * @param key Key
      * @return A list type of value
      */
-    List<String> getList(String key);
+    List<String> getStringList(String key);
+
+    /**
+     * Convert value as List as possible
+     *
+     * @param key Key
+     * @return A list type of value
+     */
+    <T> List<T> getList(String key);
+
+    /**
+     * Convert parameter as Date
+     *
+     * @param key Key
+     * @return convert long or Date as Date
+     */
+    Date getDate(String key);
+
+
+    /**
+     * Convert parameter as Date
+     *
+     * @param key Key
+     * @return convert long or Date as Date
+     */
+    Date getDate(String key, Date defaultValue);
+
+    /**
+     * Convert string or int as Enum
+     *
+     * @param key Key
+     * @return Convert string or int as Enum
+     */
+    <T extends Enum> T getEnum(Class<T> clazz, String key);
+
+    /**
+     * Convert string or int as Enum
+     *
+     * @param key Key
+     * @return Convert string or int as Enum
+     */
+    <T extends Enum> T getEnum(Class<T> clazz, String key, T defaultValue);
+
+
+    Map<String, V> toMap();
 }

@@ -86,4 +86,8 @@ public class InstanceState implements Serializable {
         this.sessionId = taskStatusData.getSessionId();
         this.statusData = taskStatusData;
     }
+
+    public TaskStatusData getStatusData() {
+        return statusData;
+    }
 }

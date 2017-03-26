@@ -36,52 +36,56 @@ public interface QuartzWinderConstants {
     String TRIGGER_GROUP_CRON = "CronTriggers";
 
     // Keys for job state map
-    String KEY_JOB_CLASS = "@jobclass";
-    String KEY_JOB_STATUS = "@jobstatus";
-    String KEY_JOB_STATUS_MSG = "@jobstatusmsg";
-    String KEY_JOB_STAGE = "@jobstage";
+    String KEY_JOB_CLASS = "@job_class";
+    String KEY_JOB_STATUS = "@job_status";
+    String KEY_JOB_STATUS_MSG = "@job_status_msg";
     String KEY_JOB_STEP = "@job_step";
-    String KEY_JOB_INPUT = "@jobinput";
-    String KEY_JOB_RESULT = "@jobresult";
-    String KEY_JOB_CREATE_DATE = "@jobcreatedate";
-    String KEY_JOB_START_DATE = "@jobstartdate";
-    String KEY_JOB_END_DATE = "@jobenddate";
-    String KEY_JOB_OWNER = "@jobowner";
-    String KEY_JOB_TARGET = "@jobtarget";
-    String KEY_JOB_ACTION = "@jobaction";
-    String JOB_STATUS_UPDATE_PREFIX = "@job/statusupdate";
-    String KEY_STATUS_UPDATE_CREATED = "created";
-    String KEY_STATUS_UPDATE_MESSAGE = "statusmessage";
-    String KEY_STATUS_UPDATE_EXECUTION_STATUS = "executionstatus";
+    String KEY_JOB_INPUT = "@job_input";
+    String KEY_JOB_RESULT = "@job_result";
+    String KEY_JOB_DATE_CREATED = "@job_date_created";
+    String KEY_JOB_START_DATE = "@job_start_date";
+    String KEY_JOB_END_DATE = "@job_end_date";
+    String KEY_JOB_OWNER = "@job_owner";
+    String KEY_JOB_TARGET = "@job_target";
+    String KEY_JOB_ACTION = "@job_action";
 
-    String KEY_JOB_IS_AWAITING_FOR_ACTION = "@jobawaitingforaction";
-    String JOB_ALERT_STATUS_PREFIX = "@job/alertstatus";
-    String KEY_ALERT_STATUS_CREATED = "created";
-    String KEY_ALERT_STATUS_MESSAGE = "alertmessage";
-    String KEY_ALERT_STATUS_ACTION_TRIGGERED = "action";
-    String KEY_ALERT_STATUS_USER_TRIGGERED = "owner";
 
-    String KEY_CHILDJOBS = "@jobchildren";
-    String KEY_JOBPARENT = "@jobparent";
+    String KEY_DATE_CREATED = "created";
+    String KEY_MESSAGE = "message";
+    String KEY_EXECUTION_STATUS = "execution_status";
+    String KEY_ACTION = "action";
+    String KEY_OWNER = "owner";
 
-    String KEY_IS_REPLACE_JOB = "@jobisreplace";
+    String KEY_JOB_IS_AWAITING_FOR_ACTION = "@job_awaiting_for_action";
+
+    String KEY_USER_ACTIONS = "@job/user_actions";
+    String KEY_STATUS_UPDATES = "@job/status_updates";
+
+    String DATA_STATUS_UPDATES = "status_updates";
+
+
+    String KEY_CHILD_JOBS = "@job_children";
+    String KEY_JOB_PARENT = "@job_pIarent";
+
+    String KEY_IS_REPLACE_JOB = "@job_is_replace";
 
     String KEY_TASKS = "@tasks";
-    String KEY_TASK = "@tasks/%s";
-    String KEY_TASK_NAME = "@tasks/%s/@name";
-    String KEY_TASK_ACTION = "@tasks/%s/@action";
-    String KEY_TASK_TARGET = "@tasks/%s/@target";
-    String KEY_TASK_RESULT = "@tasks/%s/@result";
-    String KEY_TASK_SESSION_ID = "@tasks/%s/@session_id";
-    String KEY_TASK_CREATED = "@tasks/%s/@created";
-    String KEY_TASK_STARTTIME = "@tasks/%s/@starttime";
-    String KEY_TASK_ENDTIME = "@tasks/%s/@endtime";
-    String KEY_TASK_STATUS = "@tasks/%s/@status";
-    String KEY_TASK_MANAGEDBY = "@tasks/%s/@managedBy";
-    String KEY_TASK_STATUS_UPDATES_COUNT = "@tasks/%s/statuses/@count";
-    String KEY_TASK_STATUS_UPDATES_PREFIX = "@tasks/%s/@statuses/%s";
-    String KEY_COUNT = "count";
-    String KEY_STATUSES = "statuses";
+    String KEY_TASK_ID = "id";
+    String KEY_TASK_NAME = "name";
+
+    String KEY_TASK_ACTION = "action";
+    String KEY_TASK_TARGET = "target";
+    String KEY_TASK_RESULT = "result";
+    String KEY_TASK_SESSION_ID = "session_id";
+    String KEY_TASK_CREATED = "created";
+    String KEY_TASK_START_TIME = "starttime";
+    String KEY_TASK_END_TIME = "endtime";
+    String KEY_TASK_STATUS = "status";
+//    String KEY_TASK_MANAGEDBY = "@tasks/%s/@managedBy";
+//    String KEY_TASK_STATUS_UPDATES_COUNT = "@tasks/%s/statuses/@count";
+//    String KEY_TASK_STATUS_UPDATES_PREFIX = "@tasks/%s/@statuses/%s";
+//    String KEY_COUNT = "count";
+//    String KEY_STATUSES = "statuses";
 
     String KEY_AUTO_PAUSE = "autoPause";
 

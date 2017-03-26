@@ -64,7 +64,7 @@ public class Download implements Task<TaskInput, TaskResult> {
         String step = ctx.getCurrentStep().name();
         //Set action and update information
         for(InstanceState instance: groupInstances) {
-            TaskStatusData statusData = summary.getTaskStatus(instance.getFqdn());
+            TaskStatusData statusData = instance.getStatusData();
             statusData.setAction(step);
             statusData.addUpdate(StatusEnum.EXECUTING, "Downloading " + software);
         }

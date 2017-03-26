@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder.quartz;
 
+import org.ebayopensource.common.util.Parameters;
+import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -48,6 +50,8 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     private JobDataMap jobDataMap;
 
+    private Parameters<Object> dataAsParameters;
+
     private QuartzJobSummary<TI, TR> jobSummary;
 
     private WinderEngine engine;
@@ -66,8 +70,9 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         this.jobId = jobId;
         this.jobDetail = jobDetail;
         this.jobDataMap = jobDetail.getJobDataMap();
+        this.dataAsParameters = new ParametersMap<>(jobDetail.getJobDataMap());
         this.created = dateCrated != null ? dateCrated : new Date();
-        this.jobSummary = new QuartzJobSummary<>(engine, jobId, jobDataMap);
+        this.jobSummary = new QuartzJobSummary<>(engine, jobId, dataAsParameters);
     }
 
     public WinderJobSummary getSummary() {
@@ -215,6 +220,11 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         return jobSummary.getTaskResult();
     }
 
+    @Override
+    public Parameters<Object> getDataParameters() {
+        return dataAsParameters;
+    }
+
     void setResult(TR result) {
         jobSummary.setTaskResult(result);
     }
@@ -234,8 +244,8 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     }
 
     @Override
-    public UserAction addUserAction(UserAction userAction) {
-        return QuartzJobUtil.addUserAction(engine, jobDataMap, userAction);
+    public void addUserAction(UserAction userAction) {
+        jobSummary.addUserAction(userAction);
     }
 
     @Override

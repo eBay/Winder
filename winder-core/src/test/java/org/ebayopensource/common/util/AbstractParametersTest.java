@@ -100,13 +100,13 @@ public class AbstractParametersTest {
 
     @Test
     public void getList() throws Exception {
-        assertNull(parameters.getList("test"));
+        assertNull(parameters.getStringList("test"));
 
         ParametersMap map = new ParametersMap();
         map.put("test1", new Object[] {"abc", "bcd"});
         map.put("test2", "abc");
 
-        assertArrayEquals(map.getList("test1").toArray(), new String[] {"abc", "bcd"});
-        assertArrayEquals(map.getList("test2").toArray(), new String[] { "abc" });
+        assertArrayEquals(map.getStringList("test1").toArray(), new String[] {"abc", "bcd"});
+        assertArrayEquals(map.getStringList("test2").toArray(), new String[] { "abc" });
     }
 }

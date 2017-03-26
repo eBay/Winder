@@ -37,7 +37,6 @@ import java.util.Date;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOB_OWNER;
-import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOB_STAGE;
 
 /**
  * Job Detail Factory
@@ -99,11 +98,11 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
         JobDataMap map = new JobDataMap();
         String jobInput = input.toJson();
 
-        map.put(KEY_JOB_CREATE_DATE, createDate.getTime());
+        map.put(KEY_JOB_DATE_CREATED, createDate.getTime());
         map.put(KEY_JOB_INPUT, jobInput);
         map.put(KEY_JOB_STATUS, StatusEnum.SUBMITTED.toString());
         map.put(KEY_JOB_CLASS, clazz.getName());
-        map.put(KEY_JOB_STAGE, firstStep);
+        map.put(KEY_JOB_STEP, firstStep);
         map.put(KEY_JOB_OWNER, jobOwner);
 
         // Create Job Details

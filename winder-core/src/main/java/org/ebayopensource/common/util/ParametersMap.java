@@ -87,5 +87,9 @@ public class ParametersMap<V> extends AbstractParameters<V> {
         }
         return null;
     }
+
+    public Map<String, V> toMap() {
+        return map;
+    }
 }
 

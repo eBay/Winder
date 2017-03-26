@@ -24,6 +24,8 @@
  */
 package org.ebayopensource.winder;
 
+import org.ebayopensource.common.util.Parameters;
+
 import java.util.Date;
 
 /**
@@ -43,4 +45,6 @@ public interface UserAction {
     String getUser();
 
     UserActionType getType();
+
+    Parameters<Object> toParameters();
 }

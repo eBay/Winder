@@ -56,6 +56,9 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
      */
     UserAction addUserAction(UserActionType type, String message, String owner);
 
+
+    void addUserAction(UserAction userAction);
+
     /**
      * Return all status updates
      * @return status updates, if there is no UserAction, it returns Collections.EMPTY_LIST
@@ -110,7 +113,7 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
     TaskStatusData addTaskStatus(String taskId, String taskName);
 
 
-    TaskStatusData getTaskStatus(String taskId);
+//    TaskStatusData getTaskStatus(String taskId);
 
     /**
      * Return all task status

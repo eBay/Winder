@@ -25,9 +25,8 @@
 package org.ebayopensource.common.util;
 
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Abstract Task Parameters
@@ -132,8 +131,109 @@ public abstract class AbstractParameters<V> extends AbstractMap<String, V>
      * @param key Key
      * @return A list type value
      */
-    public List<String> getList(String key) {
+    public List<String> getStringList(String key) {
         Object value = get(key);
         return DataUtil.getStringList(value);
+    }
+
+    /**
+     * Convert value as List as possible
+     *
+     * @param key Key
+     * @return A list type of value
+     */
+    @Override
+    public <T> List<T> getList(String key) {
+        Object obj = get(key);
+        if (obj instanceof List) {
+            List list = (List)obj;
+            return (List<T>)list;
+        }
+        else if (obj instanceof Object[]) {
+            Object[] array = (Object[])obj;
+            List<T> list = new ArrayList<>(array.length);
+            for (Object anArray : array) {
+                list.add((T)anArray);
+            }
+            return list;
+        }
+        else if (obj.getClass().isArray()) {
+            int len = Array.getLength(obj);
+            List<T> list = new ArrayList<>(len);
+            for (int i = 0; i < len; i++) {
+                list.add((T)Array.get(obj, i));
+            }
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * Convert parameter as Date
+     *
+     * @param key Key
+     * @return convert long or Date as Date
+     */
+    public Date getDate(String key) {
+       return getDate(key, null);
+    }
+
+    /**
+     * Convert parameter as Date
+     *
+     * @param key Key
+     * @return convert long or Date as Date
+     */
+    public Date getDate(String key, Date defaultValue) {
+        Object obj = get(key);
+        if (obj instanceof Date) {
+            return (Date)obj;
+        }
+        else if (obj instanceof Long) {
+            return new Date((Long)obj);
+        }
+        return defaultValue;
+    }
+
+    /**
+     * Convert string or int as Enum
+     *
+     * @param key Key
+     * @return Convert string or int as Enum
+     */
+    public <T extends Enum> T getEnum(Class<T> clazz, String key) {
+        return getEnum(clazz, key, null);
+    }
+
+
+    /**
+     * Convert string or int as Enum
+     *
+     * @param key Key
+     * @return Convert string or int as Enum
+     */
+    public <T extends Enum> T getEnum(Class<T> clazz, String key, T defaultValue) {
+        Object obj = get(key);
+        if (clazz.isInstance(obj)) {
+            return (T) obj;
+        }
+        else if (obj instanceof String) {
+            try {
+                return (T)Enum.valueOf(clazz, ((String)obj));
+            } catch (Exception ex) {
+            }
+        }
+        else if (obj instanceof Number) {
+            int v = ((Number)obj).intValue();
+            T[] values = clazz.getEnumConstants();
+            if (v >= 0 && v < values.length) {
+                return values[v];
+            }
+        }
+        return defaultValue;
+    }
+
+    public Map<String, V> toMap() {
+        return this;
     }
 }

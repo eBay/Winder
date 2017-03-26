@@ -46,7 +46,7 @@ public class Precheck implements Task<TaskInput, TaskResult> {
 
     @Override
     public TaskState execute(TaskContext<TaskInput, TaskResult> ctx, TaskInput input, TaskResult result) throws Exception {
-        List<String> targetServers = input.getList("targets");
+        List<String> targetServers = input.getStringList("targets");
 
         List<InstanceState> states = deploymentAPI.preCheck(targetServers);
         //Show status update in job summary
