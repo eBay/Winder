@@ -24,8 +24,6 @@
  */
 package org.ebayopensource.winder;
 
-import org.ebayopensource.common.util.Parameters;
-
 import java.util.List;
 
 /**

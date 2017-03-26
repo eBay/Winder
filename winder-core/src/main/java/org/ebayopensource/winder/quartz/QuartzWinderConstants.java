@@ -36,23 +36,23 @@ public interface QuartzWinderConstants {
     String TRIGGER_GROUP_CRON = "CronTriggers";
 
     // Keys for job state map
-    String KEY_JOBCLASS = "@jobclass";
-    String KEY_JOBSTATUS = "@jobstatus";
-    String KEY_JOBSTATUSMSG = "@jobstatusmsg";
-    String KEY_JOBSTAGE = "@jobstage";
+    String KEY_JOB_CLASS = "@jobclass";
+    String KEY_JOB_STATUS = "@jobstatus";
+    String KEY_JOB_STATUS_MSG = "@jobstatusmsg";
+    String KEY_JOB_STAGE = "@jobstage";
     String KEY_JOB_STEP = "@job_step";
-    String KEY_JOBINPUT = "@jobinput";
-    String KEY_JOBRESULT = "@jobresult";
-    String KEY_JOBCREATEDATE = "@jobcreatedate";
-    String KEY_JOBSTARTDATE = "@jobstartdate";
-    String KEY_JOBENDDATE = "@jobenddate";
-    String KEY_JOBOWNER = "@jobowner";
-    String KEY_JOBTARGET = "@jobtarget";
-    String KEY_JOBACTION = "@jobaction";
-    String JOBSTATUSUPDATE_PREFIX = "@job/statusupdate";
-    String KEY_STATUSUPDATECREATED = "created";
-    String KEY_STATUSUPDATEMESSAGE = "statusmessage";
-    String KEY_STATUSUPDATEEXECUTIONSTATUS = "executionstatus";
+    String KEY_JOB_INPUT = "@jobinput";
+    String KEY_JOB_RESULT = "@jobresult";
+    String KEY_JOB_CREATE_DATE = "@jobcreatedate";
+    String KEY_JOB_START_DATE = "@jobstartdate";
+    String KEY_JOB_END_DATE = "@jobenddate";
+    String KEY_JOB_OWNER = "@jobowner";
+    String KEY_JOB_TARGET = "@jobtarget";
+    String KEY_JOB_ACTION = "@jobaction";
+    String JOB_STATUS_UPDATE_PREFIX = "@job/statusupdate";
+    String KEY_STATUS_UPDATE_CREATED = "created";
+    String KEY_STATUS_UPDATE_MESSAGE = "statusmessage";
+    String KEY_STATUS_UPDATE_EXECUTION_STATUS = "executionstatus";
 
     String KEY_JOB_IS_AWAITING_FOR_ACTION = "@jobawaitingforaction";
     String JOB_ALERT_STATUS_PREFIX = "@job/alertstatus";

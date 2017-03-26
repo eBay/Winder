@@ -25,7 +25,6 @@
 package org.ebayopensource.winder.quartz;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.*;
 import org.ebayopensource.winder.util.JsonUtil;
 import org.quartz.JobDataMap;
@@ -36,7 +35,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -119,7 +117,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage) {
-        return QuartzJobUtil.addOrGetUpdate(engine, JOBSTATUSUPDATE_PREFIX, jobDataMap, executionStatus, statusMessage);
+        return QuartzJobUtil.addOrGetUpdate(engine, JOB_STATUS_UPDATE_PREFIX, jobDataMap, executionStatus, statusMessage);
     }
 
     public StatusUpdate addUpdate(StatusEnum status, String message, Throwable ex) {
@@ -143,7 +141,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public List<StatusUpdate> getUpdates() {
-        return QuartzJobUtil.getAllStatus(QuartzStatusUpdate.class, engine, JOBSTATUSUPDATE_PREFIX, jobDataMap);
+        return QuartzJobUtil.getAllStatus(QuartzStatusUpdate.class, engine, JOB_STATUS_UPDATE_PREFIX, jobDataMap);
     }
 
     /**
@@ -196,28 +194,28 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
 
     @Override
     public String getTarget() {
-        return jobDataMap.getString(KEY_JOBTARGET);
+        return jobDataMap.getString(KEY_JOB_TARGET);
     }
 
     @Override
     public void setTarget(String target) {
-        jobDataMap.put(KEY_JOBTARGET, target);
+        jobDataMap.put(KEY_JOB_TARGET, target);
     }
 
     @Override
     public String getAction() {
-        return jobDataMap.getString(KEY_JOBACTION);
+        return jobDataMap.getString(KEY_JOB_ACTION);
     }
 
     @Override
     public void setAction(String action) {
-        jobDataMap.put(KEY_JOBACTION, action);
+        jobDataMap.put(KEY_JOB_ACTION, action);
     }
 
     @Override
     public TR getTaskResult() {
         if (taskResult == null) {
-            String resultText = jobDataMap.getString(KEY_JOBRESULT);
+            String resultText = jobDataMap.getString(KEY_JOB_RESULT);
             if (resultText != null) {
                 try {
                     taskResult = (TR) new WinderTaskResult(JsonUtil.jsonToParameters(resultText));
@@ -235,14 +233,14 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public void setTaskResult(TR result) {
         this.taskResult = result;
-        jobDataMap.put(KEY_JOBRESULT, result.toJson());
+        jobDataMap.put(KEY_JOB_RESULT, result.toJson());
     }
 
     @Override
     public TI getTaskInput() {
         if (taskInput == null) {
-            String inputTxt = jobDataMap.getString(KEY_JOBINPUT);
-            String jobClass = jobDataMap.getString(KEY_JOBCLASS);
+            String inputTxt = jobDataMap.getString(KEY_JOB_INPUT);
+            String jobClass = jobDataMap.getString(KEY_JOB_CLASS);
             try {
                 WinderTaskInput ti = new WinderTaskInput(JsonUtil.jsonToParameters(inputTxt));
                 ti.setJobOwner(getOwner());
@@ -260,12 +258,12 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public void setTaskInput(TI taskInput) {
         this.taskInput = taskInput;
-        jobDataMap.put(KEY_JOBINPUT, taskInput.toJson());
+        jobDataMap.put(KEY_JOB_INPUT, taskInput.toJson());
     }
 
     @Override
     public String getOwner() {
-        return jobDataMap.getString(KEY_JOBOWNER);
+        return jobDataMap.getString(KEY_JOB_OWNER);
     }
 
     private List<String> getTaskIds() {

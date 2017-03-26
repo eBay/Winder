@@ -78,6 +78,6 @@ public interface WinderSchedulerManager<TI extends TaskInput> {
      * @return List for Job Details
      * @throws WinderScheduleException
      */
-    List<WinderJobDetail> listJobDetails(JobListFilter filter) throws WinderScheduleException;
+    List<WinderJobDetail> listJobDetails(JobFilter filter) throws WinderScheduleException;
 
 }

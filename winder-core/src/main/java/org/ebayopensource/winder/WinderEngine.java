@@ -43,23 +43,16 @@ public interface WinderEngine {
      */
     String getClusterName();
 
-    /**
-     * Use default DateFormat to format
-     *
-     * @param date Date
-     * @return formatted long date
-     */
-    String formatDate(Date date);
+//    /**
+//     * Use default DateFormat to format
+//     *
+//     * @param date Date
+//     * @return formatted long date
+//     */
+//    String formatDate(Date date);
 
-    /**
-     * "yyyy-MM-dd"
-     *
-     * @param date format it to short date
-     * @return Formatted short date
-     */
-    String formatShortDate(Date date);
 
-    Date parseDateFromString(String str);
+    Date parseDateFromObject(Object str);
 
     /**
      * Return configuration

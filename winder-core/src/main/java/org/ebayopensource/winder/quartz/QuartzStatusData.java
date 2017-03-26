@@ -84,31 +84,31 @@ public class QuartzStatusData implements TaskStatusData {
 
     @Override
     public Date getDateCreated() {
-        return engine.parseDateFromString(map.getString(String.format(KEY_TASK_CREATED, id)));
+        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_CREATED, id)));
     }
 
     public void setDateCreated(Date created) {
-        map.put(String.format(KEY_TASK_CREATED, id), engine.formatDate(created));
+        map.put(String.format(KEY_TASK_CREATED, id), created.getTime());
     }
 
     @Override
     public Date getStartTime() {
-        return engine.parseDateFromString(map.getString(String.format(KEY_TASK_STARTTIME, id)));
+        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_STARTTIME, id)));
     }
 
     @Override
     public void setStartTime(Date startTime) {
-        map.put(String.format(KEY_TASK_STARTTIME, id), engine.formatDate(startTime));
+        map.put(String.format(KEY_TASK_STARTTIME, id), startTime.getTime());
     }
 
     @Override
     public Date getEndTime() {
-        return engine.parseDateFromString(map.getString(String.format(KEY_TASK_ENDTIME, id)));
+        return engine.parseDateFromObject(map.get(String.format(KEY_TASK_ENDTIME, id)));
     }
 
     @Override
     public void setEndTime(Date endTime) {
-        map.put(String.format(KEY_TASK_ENDTIME, id), engine.formatDate(endTime));
+        map.put(String.format(KEY_TASK_ENDTIME, id), endTime.getTime());
     }
 
     @Override

@@ -24,18 +24,16 @@
  */
 package org.ebayopensource.winder;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Winder Job Detail, it has all the information of the job
  *
- *
-
- *
  * @author Sheldon Shao xshao@ebay.com on 10/12/16.
  * @version 1.0
  */
-public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> {
+public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> extends Comparable<WinderJobDetail> {
 
     /**
      * Return current jobId
@@ -96,9 +94,20 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> {
      */
     void setAutoPause(boolean autoPause);
 
-    String getEndDate();
+    /**
+     * Job Created Date
+     *
+     * @return Job Created Date
+     */
+    Date getCreated();
 
-    void setEndDate(String date);
+    Date getStartTime();
+
+    Date getEndTime();
+
+    void setStartTime(Date date);
+
+    void setEndTime(Date date);
 
     StatusEnum getStatus();
 

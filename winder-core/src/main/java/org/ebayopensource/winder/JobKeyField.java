@@ -25,11 +25,11 @@
 package org.ebayopensource.winder;
 
 /**
- * Detail Level
+ * Job Key Field
  *
- * @author Sheldon Shao xshao@ebay.com on 3/19/17.
+ * @author Sheldon Shao xshao@ebay.com on 3/25/17.
  * @version 1.0
  */
-public enum DetailLevel {
-    UNKNOWN, SUMMARY, DETAIL
+public enum JobKeyField {
+    ALL, JOB_NAME, JOB_GROUP;
 }

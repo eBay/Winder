@@ -36,8 +36,6 @@ public interface StatusUpdate {
 
     Date getDateCreated();
 
-    String getDateCreatedAsString();
-
     String getMessage();
 
     StatusEnum getStatus();

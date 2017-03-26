@@ -34,13 +34,9 @@ import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.jdbcjobstore.StdJDBCDelegate;
 import org.quartz.spi.ClassLoadHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,7 +54,7 @@ public class WinderJDBCDelegate extends StdJDBCDelegate {
 
     private WinderEngine engine = QuartzEngine.getInstance();
 
-    String COL_JOB_CATEGORY = "JOB_CATEGORY";
+    static final String COL_JOB_CREATED = "JOB_CREATED";
 
     /**
      * <p>
@@ -105,7 +101,6 @@ public class WinderJDBCDelegate extends StdJDBCDelegate {
 
                 JobId jobId = new QuartzJobId(groupName, jobName, engine.getClusterName());
 
-
                 Map<?, ?> map = null;
                 if (canUseProperties()) {
                     map = getMapFromProperties(rs);
@@ -116,8 +111,8 @@ public class WinderJDBCDelegate extends StdJDBCDelegate {
                 if (null != map) {
                     job.setJobDataMap(new JobDataMap(map));
                 }
-
-                winderJobDetails = new QuartzJobDetail(engine, jobId, job);
+                Timestamp timestamp = rs.getTimestamp(COL_JOB_CREATED);
+                winderJobDetails = new QuartzJobDetail(engine, jobId, job, timestamp);
             }
 
             return winderJobDetails;
@@ -145,65 +140,5 @@ public class WinderJDBCDelegate extends StdJDBCDelegate {
         }
         map = convertFromProperty(properties);
         return map;
-    }
-
-    String WINDER_INSERT_JOB_DETAIL = "INSERT INTO "
-            + TABLE_PREFIX_SUBST + TABLE_JOB_DETAILS + " ("
-            + COL_SCHEDULER_NAME + ", " + COL_JOB_NAME
-            + ", " + COL_JOB_GROUP + ", " + COL_DESCRIPTION + ", "
-            + COL_JOB_CLASS + ", " + COL_IS_DURABLE + ", "
-            + COL_IS_NONCONCURRENT +  ", " + COL_IS_UPDATE_DATA + ", "
-            + COL_REQUESTS_RECOVERY + ", "
-            + COL_JOB_DATAMAP + ", "
-            + COL_JOB_CATEGORY + ") " + " VALUES(" + SCHED_NAME_SUBST + ", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    /**
-     * <p>
-     * Insert the job detail record.
-     * </p>
-     *
-     * @param conn
-     *          the DB Connection
-     * @param job
-     *          the job to insert
-     * @return number of rows inserted
-     * @throws IOException
-     *           if there were problems serializing the JobDataMap
-     */
-    public int insertJobDetail(Connection conn, JobDetail job)
-            throws IOException, SQLException {
-        ByteArrayOutputStream baos = serializeJobData(job.getJobDataMap());
-
-        PreparedStatement ps = null;
-
-        int insertResult = 0;
-
-        try {
-            ps = conn.prepareStatement(rtp(WINDER_INSERT_JOB_DETAIL));
-            ps.setString(1, job.getKey().getName());
-            ps.setString(2, job.getKey().getGroup());
-            ps.setString(3, job.getDescription());
-            ps.setString(4, job.getJobClass().getName());
-            setBoolean(ps, 5, job.isDurable());
-            setBoolean(ps, 6, job.isConcurrentExectionDisallowed());
-            setBoolean(ps, 7, job.isPersistJobDataAfterExecution());
-            setBoolean(ps, 8, job.requestsRecovery());
-            setBytes(ps, 9, baos);
-
-            String jobDetail = null;
-            if (job instanceof QuartzJobDetail) {
-                jobDetail = ((QuartzJobDetail)job).getJobCategory();
-            }
-            if (jobDetail == null) {
-                jobDetail = "default";
-            }
-            ps.setString(10, jobDetail);
-
-            insertResult = ps.executeUpdate();
-        } finally {
-            closeStatement(ps);
-        }
-
-        return insertResult;
     }
 }

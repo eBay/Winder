@@ -28,12 +28,27 @@ import org.ebayopensource.winder.*;
 import org.ebayopensource.winder.metadata.StepRegistry;
 import org.ebayopensource.winder.metadata.WinderStepRegistry;
 import org.quartz.Scheduler;
+import org.quartz.impl.DefaultThreadExecutor;
+import org.quartz.impl.DirectSchedulerFactory;
+import org.quartz.impl.jdbcjobstore.JobStoreTX;
+import org.quartz.plugins.history.LoggingJobHistoryPlugin;
+import org.quartz.plugins.history.LoggingTriggerHistoryPlugin;
+import org.quartz.simpl.SimpleInstanceIdGenerator;
+import org.quartz.simpl.SimpleThreadPool;
+import org.quartz.spi.SchedulerPlugin;
+import org.quartz.spi.ThreadPool;
+import org.quartz.utils.DBConnectionManager;
+import org.quartz.utils.PoolingConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -48,7 +63,7 @@ public class QuartzEngine implements WinderEngine {
     private WinderStepRegistry stepRegistry = new WinderStepRegistry();
 
     static final String DATE_FORMAT_STR = "yyyy-MM-dd-HH:mm:ss.SSS'z'Z";  // use GMT-7
-    static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";  // use GMT-7
+//    static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";  // use GMT-7
 
     private static Logger log = LoggerFactory.getLogger(QuartzEngine.class);
 
@@ -75,11 +90,11 @@ public class QuartzEngine implements WinderEngine {
     public QuartzEngine() {
         this(new QuartzConfiguration());
         this.jobDetailFactory = new QuartzJobDetailFactory(this);
-        QuartzInitializer initializer = new QuartzInitializer();
-        Scheduler scheduler = initializer.init(this);
-        this.schedulerManager = new QuartzSchedulerManager(this, scheduler);
+        this.schedulerManager = new QuartzSchedulerManager(this);
         instance = this;
     }
+
+
 
     //For extension
     protected QuartzEngine(WinderConfiguration configuration) {
@@ -92,39 +107,36 @@ public class QuartzEngine implements WinderEngine {
         return clusterName;
     }
 
-    @Override
-    public String formatDate(Date date) {
-        DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
-        df.setTimeZone(configuration.getTimeZone());
-        return df.format(date);
-    }
-
-    /**
-     * "yyyy-MM-dd"
-     *
-     * @param date
-     * @return
-     */
-    public String formatShortDate(Date date) {
-        DateFormat df = new SimpleDateFormat(SHORT_DATE_FORMAT);
-        df.setTimeZone(configuration.getTimeZone());
-        return df.format(date);
-    }
+//    @Override
+//    public String formatDate(Date date) {
+//        DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
+//        df.setTimeZone(configuration.getTimeZone());
+//        return df.format(date);
+//    }
 
     @Override
-    public Date parseDateFromString(String s) {
+    public Date parseDateFromObject(Object s) {
         if (s == null) {
             return null;
         }
-        DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
-        df.setTimeZone(configuration.getTimeZone());
-        Date result = null;
-        try {
-            result = df.parse(s);
-        } catch (Exception e) {
-            log.warn("Error parsing date " + s, e);
+        if (s instanceof Long) {
+            return new Date(((Long) s));
         }
-        return result;
+        else if (s instanceof Date) {
+            return (Date)s;
+        }
+        else if (s instanceof String) {
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
+            df.setTimeZone(configuration.getTimeZone());
+            Date result = null;
+            try {
+                result = df.parse((String)s);
+            } catch (Exception e) {
+                log.warn("Error parsing date " + s, e);
+            }
+            return result;
+        }
+        return null;
     }
 
 

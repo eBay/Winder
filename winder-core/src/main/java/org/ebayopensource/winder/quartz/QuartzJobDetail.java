@@ -24,12 +24,12 @@
  */
 package org.ebayopensource.winder.quartz;
 
-import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.*;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
@@ -50,17 +50,23 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     private QuartzJobSummary<TI, TR> jobSummary;
 
-    private String jobCategory;
-
     private WinderEngine engine;
 
-    private static Logger log = LoggerFactory.getLogger(QuartzJobDetail.class);
+    private Date created;
+
+//    private static Logger log = LoggerFactory.getLogger(QuartzJobDetail.class);
 
     public QuartzJobDetail(WinderEngine engine, JobId jobId, JobDetail jobDetail) {
+        this(engine, jobId, jobDetail, null);
+    }
+
+
+    public QuartzJobDetail(WinderEngine engine, JobId jobId, JobDetail jobDetail, Date dateCrated) {
         this.engine = engine;
         this.jobId = jobId;
         this.jobDetail = jobDetail;
         this.jobDataMap = jobDetail.getJobDataMap();
+        this.created = dateCrated != null ? dateCrated : new Date();
         this.jobSummary = new QuartzJobSummary<>(engine, jobId, jobDataMap);
     }
 
@@ -153,18 +159,35 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     }
 
     @Override
-    public String getEndDate() {
-        return jobDataMap.getString(KEY_JOBENDDATE);
+    public Date getCreated() {
+        return created;
     }
 
     @Override
-    public void setEndDate(String date) {
-        jobDataMap.put(KEY_JOBENDDATE, date);
+    public Date getStartTime() {
+        long l = jobDataMap.getLong(KEY_JOB_START_DATE);
+        return l > 0 ? new Date(l) : null;
+    }
+
+    @Override
+    public Date getEndTime() {
+        long l = jobDataMap.getLong(KEY_JOB_END_DATE);
+        return l > 0 ? new Date(l) : null;
+    }
+
+    @Override
+    public void setStartTime(Date date) {
+        jobDataMap.put(KEY_JOB_START_DATE, date.getTime());
+    }
+
+    @Override
+    public void setEndTime(Date date) {
+        jobDataMap.put(KEY_JOB_END_DATE, date.getTime());
     }
 
     @Override
     public StatusEnum getStatus() {
-        String value = jobDataMap.getString(KEY_JOBSTATUS);
+        String value = jobDataMap.getString(KEY_JOB_STATUS);
         if (value != null) {
             try {
                 return StatusEnum.valueOf(value.toUpperCase());
@@ -179,7 +202,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         if (status == null) {
             status = StatusEnum.UNKNOWN;
         }
-        jobDataMap.put(KEY_JOBSTATUS, status.name());
+        jobDataMap.put(KEY_JOB_STATUS, status.name());
     }
 
     @Override
@@ -198,7 +221,6 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     void setInput(TI taskInput) {
         jobSummary.setTaskInput(taskInput);
-        jobCategory = taskInput.getJobCategory();
     }
 
     @Override
@@ -253,11 +275,17 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         }
     }
 
-    public String getJobCategory() {
-        return jobCategory;
-    }
+    @Override
+    public int compareTo(WinderJobDetail o) {
+        if (o == null) {
+            return 0;
+        }
+        long first = getCreated().getTime();
+        long second = o.getCreated().getTime();
 
-    public void setJobCategory(String jobCategory) {
-        this.jobCategory = jobCategory;
+        if (first == second) {
+            return 0;
+        }
+        return first > second ? -1 : 1;
     }
 }

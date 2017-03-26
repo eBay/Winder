@@ -102,7 +102,7 @@ public class QuartzJobContext implements WinderJobContext {
     public int getJobStep() {
         String jobStep = map.getString(KEY_JOB_STEP);
         if (jobStep == null) { //For eBay code backward compatible
-            jobStep = map.getString(KEY_JOBSTAGE);
+            jobStep = map.getString(KEY_JOB_STAGE);
         }
 
         int result = -1;
@@ -134,13 +134,13 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public String getStatusMessage() {
-        String result = jobDetail.getJobDataMap().getString(KEY_JOBSTATUSMSG);
+        String result = jobDetail.getJobDataMap().getString(KEY_JOB_STATUS_MSG);
         return (result == null) ? "" : result;
     }
 
     public void setStatusMessage(String msg) {
         String nmsg = (msg == null) ? "" : msg;
-        jobDetail.getJobDataMap().put(KEY_JOBSTATUSMSG, nmsg);
+        jobDetail.getJobDataMap().put(KEY_JOB_STATUS_MSG, nmsg);
     }
 
 
@@ -181,10 +181,10 @@ public class QuartzJobContext implements WinderJobContext {
 
     public void done(StatusEnum status) {
         if (status != StatusEnum.UNKNOWN) {
-            jobDetail.getJobDataMap().put(KEY_JOBSTATUS, String.valueOf(status));
+            jobDetail.getJobDataMap().put(KEY_JOB_STATUS, String.valueOf(status));
         }
         Date endDate = new Date();
-        jobDetail.setEndDate(winderEngine.formatDate(endDate));
+        jobDetail.setEndTime(endDate);
 
         if (log.isDebugEnabled()) {
             log.debug("Job complete: " + jobId.toString());
@@ -208,7 +208,7 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public StatusEnum getJobStatus() {
-        String statusName = jobDetail.getJobDataMap().getString(KEY_JOBSTATUS);
+        String statusName = jobDetail.getJobDataMap().getString(KEY_JOB_STATUS);
         if (statusName == null) {
             return StatusEnum.UNKNOWN;
         }
@@ -222,7 +222,7 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public void setJobStatus(StatusEnum status) {
-        jobDetail.getJobDataMap().put(KEY_JOBSTATUS,status.name());
+        jobDetail.getJobDataMap().put(KEY_JOB_STATUS,status.name());
     }
 
 

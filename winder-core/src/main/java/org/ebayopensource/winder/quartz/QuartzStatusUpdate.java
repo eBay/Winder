@@ -42,10 +42,10 @@ public class QuartzStatusUpdate extends QuartzStatusBase<StatusEnum> implements 
     public QuartzStatusUpdate(WinderEngine engine, JobDataMap jobDataMap, String id, StatusEnum statusEnum, String message) {
         this(engine, jobDataMap, id);
 
-        String key = genKey(KEY_STATUSUPDATEEXECUTIONSTATUS);
+        String key = genKey(KEY_STATUS_UPDATE_EXECUTION_STATUS);
         jobDataMap.put(key, statusEnum.name());
 
-        key = genKey(KEY_STATUSUPDATEMESSAGE);
+        key = genKey(KEY_STATUS_UPDATE_MESSAGE);
         jobDataMap.put(key, QuartzJobUtil.formatString(message, maxMessages, true));
     }
 
@@ -55,17 +55,17 @@ public class QuartzStatusUpdate extends QuartzStatusBase<StatusEnum> implements 
 
     @Override
     protected String getKeyDateCreated() {
-        return KEY_STATUSUPDATECREATED;
+        return KEY_STATUS_UPDATE_CREATED;
     }
 
     @Override
     protected String getKeyMessage() {
-        return KEY_STATUSUPDATEMESSAGE;
+        return KEY_STATUS_UPDATE_MESSAGE;
     }
 
     @Override
     protected String getKeyStatus() {
-        return KEY_STATUSUPDATEEXECUTIONSTATUS;
+        return KEY_STATUS_UPDATE_EXECUTION_STATUS;
     }
 
     @Override

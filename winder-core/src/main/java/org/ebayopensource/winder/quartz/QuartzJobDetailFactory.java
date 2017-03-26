@@ -31,12 +31,13 @@ import org.ebayopensource.winder.util.Guid;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.utils.Key;
 
 import java.util.Date;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
-import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOBOWNER;
-import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOBSTAGE;
+import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOB_OWNER;
+import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_JOB_STAGE;
 
 /**
  * Job Detail Factory
@@ -83,14 +84,14 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
         /*
          * Group name priority:
          *
-         * taskInput.group > @Job.group > winder default group name("formatted date")
+         * taskInput.group > @Job.group > "default_group"
          */
         String groupName = input.getJobGroup();
         if (StringUtils.isBlank(groupName)) {
             if (metadata != null) {
                 groupName = metadata.getJobGroup();
                 if (StringUtils.isBlank(groupName)) {
-                    groupName = engine.formatShortDate(createDate);
+                    groupName = Key.DEFAULT_GROUP;
                 }
             }
         }
@@ -98,14 +99,12 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
         JobDataMap map = new JobDataMap();
         String jobInput = input.toJson();
 
-        String createDateStr = engine.formatDate(createDate);
-
-        map.put(KEY_JOBCREATEDATE, createDateStr);
-        map.put(KEY_JOBINPUT, jobInput);
-        map.put(KEY_JOBSTATUS, StatusEnum.SUBMITTED.toString());
-        map.put(KEY_JOBCLASS, clazz.getName());
-        map.put(KEY_JOBSTAGE, firstStep);
-        map.put(KEY_JOBOWNER, jobOwner);
+        map.put(KEY_JOB_CREATE_DATE, createDate.getTime());
+        map.put(KEY_JOB_INPUT, jobInput);
+        map.put(KEY_JOB_STATUS, StatusEnum.SUBMITTED.toString());
+        map.put(KEY_JOB_CLASS, clazz.getName());
+        map.put(KEY_JOB_STAGE, firstStep);
+        map.put(KEY_JOB_OWNER, jobOwner);
 
         // Create Job Details
         JobDetail jd = JobBuilder.newJob(QuartzJob.class).withIdentity(jobName, groupName).storeDurably(true) // durability:

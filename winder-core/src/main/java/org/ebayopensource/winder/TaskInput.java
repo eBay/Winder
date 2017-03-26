@@ -60,13 +60,6 @@ public interface TaskInput extends Parameters<Object> {
     String getJobGroup();
 
     /**
-     * A category for querying the jobs
-     *
-     * @return Category
-     */
-    String getJobCategory();
-
-    /**
      * Job owner, who created this job?
      *
      * @return Job owner

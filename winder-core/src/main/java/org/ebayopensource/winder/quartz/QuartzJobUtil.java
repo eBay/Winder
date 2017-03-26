@@ -82,8 +82,8 @@ class QuartzJobUtil {
 
 
         if (size > 0) {
-            String keyStatus = generateKeyName(id, KEY_STATUSUPDATEEXECUTIONSTATUS);
-            String keyMessage = generateKeyName(id, KEY_STATUSUPDATEMESSAGE);
+            String keyStatus = generateKeyName(id, KEY_STATUS_UPDATE_EXECUTION_STATUS);
+            String keyMessage = generateKeyName(id, KEY_STATUS_UPDATE_MESSAGE);
             String lastStatus = map.getString(keyStatus);
             String lastMessage = map.getString(keyMessage);
             if (statusEnum.name().equals(lastStatus) && StringUtils.equals(message, lastMessage)) {

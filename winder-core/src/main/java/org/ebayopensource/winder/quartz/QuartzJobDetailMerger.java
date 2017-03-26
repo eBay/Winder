@@ -27,6 +27,7 @@ package org.ebayopensource.winder.quartz;
 import org.ebayopensource.winder.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,9 +44,9 @@ public class QuartzJobDetailMerger implements WinderJobDetailMerger {
 
         StatusEnum dbStatus = dbDetail.getStatus();
         //To preserve endDate
-        String endDate = dbDetail.getEndDate();
+        Date endDate = dbDetail.getEndTime();
         if (endDate != null) {
-            dbDetail.setEndDate(endDate);
+            dbDetail.setEndTime(endDate);
         }
 
         StatusEnum runtimeStatus = runtimeDetail.getStatus();
@@ -104,11 +105,11 @@ public class QuartzJobDetailMerger implements WinderJobDetailMerger {
 
         runtimeDetail.setAutoPause(dbDetail.isAutoPause());
 
-//        JSONObject jobInputObjDB = (JSONObject) JobUtils.jsonFromText(dbMap.get(KEY_JOBINPUT).toString());
-//        JSONObject jobInputObjCtx = (JSONObject) JobUtils.jsonFromText(contextMap.get(KEY_JOBINPUT).toString());
+//        JSONObject jobInputObjDB = (JSONObject) JobUtils.jsonFromText(dbMap.get(KEY_JOB_INPUT).toString());
+//        JSONObject jobInputObjCtx = (JSONObject) JobUtils.jsonFromText(contextMap.get(KEY_JOB_INPUT).toString());
 //
 //        jobInputObjCtx.put(AUTO_PAUSE, jobInputObjDB.get(AUTO_PAUSE));
-//        contextMap.put(KEY_JOBINPUT, jobInputObjCtx.toString());
+//        contextMap.put(KEY_JOB_INPUT, jobInputObjCtx.toString());
     }
 
     protected WinderJobDetail doMoreMerge(WinderJobDetail dbDetail, WinderJobDetail runtimeDetail) {

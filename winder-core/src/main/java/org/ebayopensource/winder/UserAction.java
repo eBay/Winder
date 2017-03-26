@@ -38,17 +38,9 @@ public interface UserAction {
 
     Date getDateCreated();
 
-    String getDateCreatedAsString();
-
     String getMessage();
-
-//    void setMessage(String message);
 
     String getUser();
 
-//    void setUser(String owner);
-
     UserActionType getType();
-
-//    void setType(InteractionType type);
 }

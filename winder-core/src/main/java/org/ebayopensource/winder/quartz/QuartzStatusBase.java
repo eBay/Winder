@@ -29,8 +29,6 @@ import org.quartz.JobDataMap;
 
 import java.util.Date;
 
-import static org.ebayopensource.winder.quartz.QuartzWinderConstants.KEY_STATUSUPDATECREATED;
-
 /**
  *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
@@ -55,7 +53,7 @@ public abstract class QuartzStatusBase<S extends Enum> {
         String key = genKey(getKeyDateCreated());
         if (!jobDataMap.containsKey(key)) {
             dateCreated = new Date();
-            jobDataMap.put(key, engine.formatDate(dateCreated));
+            jobDataMap.put(key, dateCreated.getTime());
         }
         this.maxMessages = engine.getConfiguration().getInt("winder.task.maxMessage", 1000);
     }
@@ -72,13 +70,9 @@ public abstract class QuartzStatusBase<S extends Enum> {
 
     public Date getDateCreated() {
         if (dateCreated == null) {
-            dateCreated = engine.parseDateFromString(getDateCreatedAsString());
+            dateCreated = engine.parseDateFromObject(jobDataMap.get(genKey(getKeyDateCreated())));
         }
         return dateCreated;
-    }
-
-    public String getDateCreatedAsString() {
-        return jobDataMap.getString(genKey(getDateCreatedAsString()));
     }
 
     public String getMessage() {

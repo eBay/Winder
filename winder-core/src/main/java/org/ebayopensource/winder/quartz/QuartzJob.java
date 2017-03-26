@@ -29,8 +29,6 @@ import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
 /**
@@ -51,7 +49,7 @@ public class QuartzJob implements Job {
         WinderEngine engine = QuartzEngine.getInstance();
         QuartzJobContext ctx = new QuartzJobContext(engine, context);
         WinderJobDetail runtimeDetail = ctx.getJobDetail();
-        String className = runtimeMap.getString(KEY_JOBCLASS);
+        String className = runtimeMap.getString(KEY_JOB_CLASS);
 
         WinderJob job = null;
         Runnable runnable = null;
@@ -84,9 +82,8 @@ public class QuartzJob implements Job {
             throw ex;
         }
 
-        if (!runtimeMap.containsKey(KEY_JOBSTARTDATE)) {
-            String startDateStr = engine.formatDate(new Date());
-            runtimeMap.put(KEY_JOBSTARTDATE, startDateStr);
+        if (!runtimeMap.containsKey(KEY_JOB_START_DATE)) {
+            runtimeMap.put(KEY_JOB_START_DATE, System.currentTimeMillis());
         }
 
         if ( StatusEnum.CANCEL_IN_PROGRESS != ctx.getJobStatus() &&
