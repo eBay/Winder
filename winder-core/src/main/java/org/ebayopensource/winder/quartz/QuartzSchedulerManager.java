@@ -102,7 +102,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
 
 
         String quartzType = configuration.getString("winder.quartz.scheduler_type");
-        dataSourceName = configuration.getString("winder.quartz.dsname");
+        dataSourceName = configuration.getString("winder.quartz.datasource");
 
         Scheduler scheduler = null;
         boolean inMemoryScheduler = false;
@@ -120,21 +120,28 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
                 threadPool.initialize();
                 String instanceId = (new SimpleInstanceIdGenerator()).generateInstanceId();
 
-                if (dataSourceName == null) {
-                    dataSourceName = "winder_quartz";
-                }
 
-                String jdbcDriver = configuration.getString("winder.quartz.ds.driver");
-                String jdbcUrl = configuration.getString("winder.quartz.ds.url");
-                String jdbcUser = configuration.getString("winder.quartz.ds.username");
-                String jdbcPassword = configuration.getString("winder.quartz.ds.password");
+                DBConnectionManager dbMgr = DBConnectionManager.getInstance();
+
                 int poolSize = configuration.getInt("winder.quartz.ds.pool_size", numThreads + 15);
 
-                String validate = configuration.getString("winder.quartz.ds.validate_sql", "SELECT 1 /* ping */");
-                PoolingConnectionProvider pooling = new PoolingConnectionProvider(
-                        jdbcDriver, jdbcUrl, jdbcUser, jdbcPassword, poolSize, validate);
-                DBConnectionManager dbMgr = DBConnectionManager.getInstance();
-                dbMgr.addConnectionProvider(dataSourceName, pooling);
+                String jdbcUrl = dataSourceName;
+                if ("ds".equals(dataSourceName)) {
+                    //
+                    String jdbcDriver = configuration.getString("winder.quartz.ds.driver");
+                    jdbcUrl = configuration.getString("winder.quartz.ds.url");
+                    String jdbcUser = configuration.getString("winder.quartz.ds.username");
+                    String jdbcPassword = configuration.getString("winder.quartz.ds.password");
+
+                    String validate = configuration.getString("winder.quartz.ds.validate_sql", "SELECT 1 /* ping */");
+                    PoolingConnectionProvider pooling = new PoolingConnectionProvider(
+                            jdbcDriver, jdbcUrl, jdbcUser, jdbcPassword, poolSize, validate);
+
+                    dbMgr.addConnectionProvider(dataSourceName, pooling);
+                }
+                else {
+                    log.warn("Please make sure the data source:" + dataSourceName + " has already been initialized in somewhere else");
+                }
 
                 boolean enableQuartz = configuration.getBoolean("winder.quartz.enable", true);
 
