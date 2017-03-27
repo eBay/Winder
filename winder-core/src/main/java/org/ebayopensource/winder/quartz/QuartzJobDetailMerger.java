@@ -95,10 +95,10 @@ public class QuartzJobDetailMerger implements WinderJobDetailMerger {
         List<UserAction> dbUserActions = dbDetail.getUserActions();
         List<UserAction> runtimeActions = runtimeDetail.getUserActions();
 
-        int alertStatusSizeinDB = dbUserActions.size();
+        int alertStatusSizeInDB = dbUserActions.size();
         int alertStatusSizeinContext = runtimeActions.size();
-        if(alertStatusSizeinDB > alertStatusSizeinContext){
-            for(int i= alertStatusSizeinContext; i< alertStatusSizeinDB; i++){
+        if(alertStatusSizeInDB > alertStatusSizeinContext){
+            for(int i= alertStatusSizeinContext; i< alertStatusSizeInDB; i++){
                 runtimeDetail.addUserAction(dbUserActions.get(i));
             }
         }

@@ -28,7 +28,6 @@ import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.WinderConfiguration;
 
 import java.util.Properties;
-import java.util.TimeZone;
 
 /**
  * Quartz Configuration
@@ -52,19 +51,19 @@ public class QuartzConfiguration extends ParametersMap<Object> implements Winder
         return super.containsKey(key) || properties.containsKey(key);
     }
 
-    private TimeZone timeZone = null;
-
-    @Override
-    public TimeZone getTimeZone() {
-        if (timeZone == null) {
-            String timeZoneId = getString("winder.timezone");
-            if (timeZoneId != null) {
-                timeZone = TimeZone.getTimeZone(timeZoneId);
-            }
-            if (timeZone == null) {
-                timeZone = TimeZone.getDefault();
-            }
-        }
-        return timeZone;
-    }
+//    private TimeZone timeZone = null;
+//
+//    @Override
+//    public TimeZone getTimeZone() {
+//        if (timeZone == null) {
+//            String timeZoneId = getString("winder.timezone");
+//            if (timeZoneId != null) {
+//                timeZone = TimeZone.getTimeZone(timeZoneId);
+//            }
+//            if (timeZone == null) {
+//                timeZone = TimeZone.getDefault();
+//            }
+//        }
+//        return timeZone;
+//    }
 }

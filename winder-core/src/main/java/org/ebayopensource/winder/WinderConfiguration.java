@@ -36,5 +36,5 @@ import java.util.TimeZone;
  */
 public interface WinderConfiguration extends Parameters<Object> {
 
-    TimeZone getTimeZone();
+//    TimeZone getTimeZone();
 }
