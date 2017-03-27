@@ -36,7 +36,7 @@ import org.ebayopensource.winder.metadata.WinderStepRegistry;
  */
 public class QuartzEngine implements WinderEngine {
 
-    private String clusterName;
+    private String clusterName = "winder";
     private WinderStepRegistry stepRegistry = new WinderStepRegistry();
 
 //    static final String DATE_FORMAT_STR = "yyyy-MM-dd-HH:mm:ss.SSS'z'Z";  // use GMT-7
@@ -66,17 +66,18 @@ public class QuartzEngine implements WinderEngine {
 
     public QuartzEngine() {
         this(new QuartzConfiguration());
-        this.jobDetailFactory = new QuartzJobDetailFactory(this);
-        this.schedulerManager = new QuartzSchedulerManager(this);
-        instance = this;
     }
 
 
-
     //For extension
-    protected QuartzEngine(WinderConfiguration configuration) {
+    public QuartzEngine(WinderConfiguration configuration) {
         this.configuration = configuration;
         setClusterName(configuration.getString("winder.cluster", "winder"));
+
+        this.jobDetailFactory = new QuartzJobDetailFactory(this);
+        this.schedulerManager = new QuartzSchedulerManager(this);
+        instance = this;
+
     }
 
     @Override

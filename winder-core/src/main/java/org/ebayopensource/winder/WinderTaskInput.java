@@ -41,9 +41,9 @@ import java.util.Date;
  */
 public class WinderTaskInput extends ParametersMap<Object> implements TaskInput {
 
-    public static final String JOB_SCHEDULE_TIME = "job_schedule_time";
-    public static final String JOB_DURATION = "job_duration";
-    public static final String JOB_STEP_INTERVAL = "job_step_interval";
+    private static final String JOB_SCHEDULE_TIME = "job_schedule_time";
+    private static final String JOB_DURATION = "job_duration";
+    private static final String JOB_STEP_INTERVAL = "job_step_interval";
 
     private Class jobClass;
     private String jobType;
@@ -109,7 +109,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
             jobScheduleTime = getDate(JOB_SCHEDULE_TIME);
             if (jobScheduleTime == null) {
                 jobScheduleTime = new Date();
-                put(JOB_SCHEDULE_TIME, jobScheduleTime);
+                put(JOB_SCHEDULE_TIME, jobScheduleTime.getTime());
             }
         }
         return jobScheduleTime;

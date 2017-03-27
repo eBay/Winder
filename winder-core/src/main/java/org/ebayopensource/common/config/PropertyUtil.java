@@ -27,11 +27,10 @@ package org.ebayopensource.common.config;
 
 import org.ebayopensource.common.util.DataUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -203,6 +202,45 @@ public class PropertyUtil {
         if (!injectors.isEmpty()) {
             for(PropertyInjector injector: injectors) {
                 injector.inject(obj, parameters);
+            }
+        }
+    }
+
+    /**
+     * Resource as Properties
+     *
+     * @param resource Resource
+     */
+    public static Properties getResourceAsProperties(String resource) {
+        return getResourceAsProperties(Thread.currentThread().getContextClassLoader(), resource);
+    }
+
+    /**
+     * Resource as Properties
+     *
+     * @param classLoader Class Loader
+     * @param resource Resource
+     */
+    public static Properties getResourceAsProperties(ClassLoader classLoader, String resource) {
+        if (classLoader == null) {
+            classLoader = ClassLoader.getSystemClassLoader();
+        }
+        Properties properties = new Properties();
+        InputStream inputStream = classLoader.getResourceAsStream(resource);
+        if (inputStream == null) {
+            throw new IllegalStateException("No such resource:" + resource);
+        }
+        try {
+            properties.load(inputStream);
+            return properties;
+        }
+        catch(IOException ex) {
+            throw new IllegalStateException("Loading properties exception:", ex);
+        }
+        finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
             }
         }
     }
