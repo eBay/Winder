@@ -34,6 +34,7 @@ public class Done implements Task<TaskInput, TaskResult> {
 
     @Override
     public TaskState execute(TaskContext<TaskInput, TaskResult> ctx, TaskInput input, TaskResult result) throws Exception {
+        System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         return TaskState.COMPLETED;
     }
 }

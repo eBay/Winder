@@ -72,6 +72,8 @@ public class Startup implements Task<TaskInput, TaskResult> {
 
         result.put("last_step", ctx.getCurrentStep().name());
         deploymentAPI.startup(groupInstances, software);
+
+        System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         return TaskState.COMPLETED;
     }
 }

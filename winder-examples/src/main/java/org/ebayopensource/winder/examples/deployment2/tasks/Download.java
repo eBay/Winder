@@ -72,6 +72,7 @@ public class Download implements Task<TaskInput, TaskResult> {
         ctx.getJobContext().addUpdate(StatusEnum.EXECUTING, "Downloading " + software + ", group:" + groupId);
         deploymentAPI.download(groupInstances, software);
         result.put("last_step", step);
+        System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         return TaskState.COMPLETED;
     }
 }

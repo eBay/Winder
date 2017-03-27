@@ -61,6 +61,8 @@ public class Precheck implements Task<TaskInput, TaskResult> {
             taskStatusData.setAction(ctx.getCurrentStep().name());
             taskStatusData.setExecutionStatus(StatusEnum.EXECUTING);
         }
+
+        System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         return TaskState.COMPLETED;
     }
 }

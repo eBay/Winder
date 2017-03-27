@@ -96,6 +96,8 @@ public class Validate implements Task<TaskInput, TaskResult> {
                 }
             }
         }
+
+        System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         return TaskState.WAITING;
     }
 }
