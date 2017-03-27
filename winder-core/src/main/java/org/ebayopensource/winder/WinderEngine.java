@@ -43,17 +43,6 @@ public interface WinderEngine {
      */
     String getClusterName();
 
-//    /**
-//     * Use default DateFormat to format
-//     *
-//     * @param date Date
-//     * @return formatted long date
-//     */
-//    String formatDate(Date date);
-
-
-//    Date parseDateFromObject(Object str);
-
     /**
      * Return configuration
      *
@@ -82,7 +71,7 @@ public interface WinderEngine {
      * @param jobClass Job class
      * @throws WinderScheduleException When data base exception
      */
-    void scheduleJob(Class jobClass) throws WinderScheduleException;
+    JobId scheduleJob(Class jobClass) throws WinderScheduleException;
 
     /**
      * Fast method
@@ -90,7 +79,7 @@ public interface WinderEngine {
      * @param taskInput TaskInput
      * @throws WinderScheduleException When data base exception
      */
-    <TI extends TaskInput> void scheduleJob(TI taskInput) throws WinderScheduleException;
+    <TI extends TaskInput> JobId scheduleJob(TI taskInput) throws WinderScheduleException;
 
     /**
      * Job Detail Merger

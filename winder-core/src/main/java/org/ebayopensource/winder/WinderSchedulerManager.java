@@ -43,6 +43,14 @@ public interface WinderSchedulerManager<TI extends TaskInput> {
      */
     WinderJobDetail getJobDetail(JobId jobId) throws WinderScheduleException;
 
+    /**
+     * Return job detail by jobId
+     *
+     * @param jobId Job Id
+     * @return Job Detail
+     */
+    WinderJobDetail getJobDetail(String jobId) throws WinderScheduleException;
+
     // remove all related triggers
     void unscheduleJob(JobId jobId) throws WinderScheduleException;
 

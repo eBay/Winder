@@ -32,6 +32,8 @@ package org.ebayopensource.winder;
  */
 public interface JobId {
 
+    char SEP = '|';
+
     String getName();
 
     String getGroup();

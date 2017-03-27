@@ -39,11 +39,6 @@ public class QuartzEngine implements WinderEngine {
     private String clusterName = "winder";
     private WinderStepRegistry stepRegistry = new WinderStepRegistry();
 
-//    static final String DATE_FORMAT_STR = "yyyy-MM-dd-HH:mm:ss.SSS'z'Z";  // use GMT-7
-//    static final String SHORT_DATE_FORMAT = "yyyy-MM-dd";  // use GMT-7
-
-//    private static Logger log = LoggerFactory.getLogger(QuartzEngine.class);
-
     private WinderConfiguration configuration;
 
     private QuartzSchedulerManager schedulerManager;
@@ -85,38 +80,6 @@ public class QuartzEngine implements WinderEngine {
         return clusterName;
     }
 
-//    @Override
-//    public String formatDate(Date date) {
-//        DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
-//        df.setTimeZone(configuration.getTimeZone());
-//        return df.format(date);
-//    }
-
-//    @Override
-//    public Date parseDateFromObject(Object s) {
-//        if (s == null) {
-//            return null;
-//        }
-//        if (s instanceof Long) {
-//            return new Date(((Long) s));
-//        }
-//        else if (s instanceof Date) {
-//            return (Date)s;
-//        }
-//        else if (s instanceof String) {
-//            DateFormat df = new SimpleDateFormat(DATE_FORMAT_STR);
-//            df.setTimeZone(configuration.getTimeZone());
-//            Date result = null;
-//            try {
-//                result = df.parse((String)s);
-//            } catch (Exception e) {
-//                log.warn("Error parsing date " + s, e);
-//            }
-//            return result;
-//        }
-//        return null;
-//    }
-
 
     @Override
     public WinderConfiguration getConfiguration() {
@@ -134,13 +97,13 @@ public class QuartzEngine implements WinderEngine {
     }
 
     @Override
-    public void scheduleJob(Class jobClass) throws WinderScheduleException {
-        scheduleJob(new WinderTaskInput(jobClass));
+    public JobId scheduleJob(Class jobClass) throws WinderScheduleException {
+        return scheduleJob(new WinderTaskInput(jobClass));
     }
 
     @Override
-    public <TI extends TaskInput> void scheduleJob(TI taskInput) throws WinderScheduleException {
-        getSchedulerManager().scheduleJob(taskInput);
+    public <TI extends TaskInput> JobId scheduleJob(TI taskInput) throws WinderScheduleException {
+        return getSchedulerManager().scheduleJob(taskInput);
     }
 
     @Override

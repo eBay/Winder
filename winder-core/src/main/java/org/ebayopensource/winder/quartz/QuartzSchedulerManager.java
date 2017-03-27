@@ -233,6 +233,11 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         }
     }
 
+    @Override
+    public WinderJobDetail getJobDetail(String jobId) throws WinderScheduleException {
+        return getJobDetail(WinderUtil.toJobId(jobId));
+    }
+
     protected JobKey getKey(JobId jobId) {
         if (jobId instanceof QuartzJobId) {
             return ((QuartzJobId)jobId).getKey();
