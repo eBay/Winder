@@ -92,6 +92,13 @@ public interface TaskInput extends Parameters<Object> {
 
 
     /**
+     * To run all steps in one trigger ?
+     *
+     * @return run all steps in one trigger?
+     */
+    boolean isStraightforward();
+
+    /**
      * To Json
      *
      * @return Convert the input parameters to Json

@@ -46,8 +46,6 @@ public class WinderStair implements WinderJob {
 
     protected WinderSchedulerManager schedulerManager;
 
-    private boolean straightforward = true;
-
     private int maxSteps = 60;
 
     private Logger log;
@@ -80,6 +78,7 @@ public class WinderStair implements WinderJob {
             throw new WinderJobException("Failure initializing context", e);
         }
 
+        boolean straightforward = ctx.getJobDetail().getInput().isStraightforward();
         if (straightforward) {
             int stepCount = 0;
             while (stepCount < maxSteps) {
@@ -191,13 +190,5 @@ public class WinderStair implements WinderJob {
 
     public WinderEngine getEngine() {
         return engine;
-    }
-
-    public boolean isStraightforward() {
-        return straightforward;
-    }
-
-    public void setStraightforward(boolean straightforward) {
-        this.straightforward = straightforward;
     }
 }

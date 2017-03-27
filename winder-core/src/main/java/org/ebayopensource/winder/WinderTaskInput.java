@@ -52,6 +52,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
     private int stepInterval = 10;
     private int jobDuration = 24 * 60 * 60;
     private Date jobScheduleTime;
+    private boolean straightforward = true;
 
     public WinderTaskInput() {
     }
@@ -115,6 +116,11 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
         return jobScheduleTime;
     }
 
+    @Override
+    public boolean isStraightforward() {
+        return straightforward;
+    }
+
     private static Logger log = LoggerFactory.getLogger(WinderTaskInput.class);
 
     @Override
@@ -147,5 +153,9 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setJobGroup(String jobGroup) {
         this.jobGroup = jobGroup;
+    }
+
+    public void setStraightforward(boolean straightforward) {
+        this.straightforward = straightforward;
     }
 }
