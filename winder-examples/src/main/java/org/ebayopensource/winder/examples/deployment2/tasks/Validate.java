@@ -54,7 +54,7 @@ public class Validate implements Task<TaskInput, TaskResult> {
         String lastStep = result.getString("last_step");
 
         WinderJobSummary<TaskInput, TaskResult> summary = ctx.getJobContext().getJobSummary();
-        List<TaskStatusData> taskStatuses = summary.getAllTaskStatuses();
+        List<TaskData> taskStatuses = summary.getAllTasks();
         int groupId = ctx.getGroupId();
         int maxGroup = 3; //From some where
         List<InstanceState> groupInstances = groupStrategy.getGroup(taskStatuses, groupId, maxGroup);
@@ -62,7 +62,7 @@ public class Validate implements Task<TaskInput, TaskResult> {
         String step = ctx.getCurrentStep().name();
         //Set action and update information
         for(InstanceState instance: groupInstances) {
-            TaskStatusData statusData = instance.getStatusData();
+            TaskData statusData = instance.getTaskData();
             statusData.setAction(step);
             statusData.addUpdate(StatusEnum.EXECUTING, "Validating " + lastStep);
         }
@@ -84,7 +84,7 @@ public class Validate implements Task<TaskInput, TaskResult> {
             else if ("STARTUP".equals(lastStep)) {
                 //Set completed status
                 for(InstanceState instance: groupInstances) {
-                    TaskStatusData statusData = instance.getStatusData();
+                    TaskData statusData = instance.getTaskData();
                     statusData.setExecutionStatus(StatusEnum.COMPLETED);
                 }
                 if (groupId < maxGroup) { //Go back to download

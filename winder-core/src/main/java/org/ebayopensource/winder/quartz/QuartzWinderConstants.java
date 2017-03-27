@@ -75,8 +75,6 @@ public interface QuartzWinderConstants {
 
     String KEY_TASK_ACTION = "action";
     String KEY_TASK_TARGET = "target";
-    String KEY_TASK_RESULT = "result";
-    String KEY_TASK_SESSION_ID = "session_id";
     String KEY_TASK_DATE_CREATED = "date_created";
     String KEY_TASK_START_DATE = "start_date";
     String KEY_TASK_END_DATE = "end_date";

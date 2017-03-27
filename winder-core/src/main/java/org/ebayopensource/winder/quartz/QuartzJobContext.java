@@ -78,7 +78,7 @@ public class QuartzJobContext implements WinderJobContext {
         initStep = configuration.getInt("winder_steps_init_step", 0);
         maxStep = configuration.getInt("winder_steps_max_step", 100000);
 
-        objectParameters = jobDetail.getDataParameters();
+        objectParameters = jobDetail.getData();
     }
 
     public <TI extends TaskInput, TR extends TaskResult>  WinderJobDetail<TI, TR> getJobDetail() {

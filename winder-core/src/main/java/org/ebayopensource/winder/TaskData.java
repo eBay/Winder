@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
  */
-public interface TaskStatusData {
+public interface TaskData extends Parameters<Object> {
 
     String getId();
 
@@ -56,10 +56,6 @@ public interface TaskStatusData {
 
     void setExecutionStatus(StatusEnum executionStatus);
 
-    String getSessionId();
-
-    void setSessionId(String sessionId);
-
     String getTarget();
 
     void setTarget(String target);
@@ -68,13 +64,7 @@ public interface TaskStatusData {
 
     void setAction(String action);
 
-    Parameters<Object> getResult();
-
-    void setResult(Parameters<Object> result);
-
     StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage);
 
     List<StatusUpdate> getUpdates();
-
-    Map<String, Object> toMap();
 }

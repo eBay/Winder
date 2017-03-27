@@ -26,7 +26,7 @@ package org.ebayopensource.deployment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.ebayopensource.winder.StatusEnum;
-import org.ebayopensource.winder.TaskStatusData;
+import org.ebayopensource.winder.TaskData;
 
 import java.io.Serializable;
 
@@ -44,7 +44,7 @@ public class InstanceState implements Serializable {
 
     private String sessionId;
 
-    private transient TaskStatusData statusData;
+    private transient TaskData taskData;
 
     public InstanceState(String fqdn, StatusEnum code) {
         this.fqdn = fqdn;
@@ -65,8 +65,8 @@ public class InstanceState implements Serializable {
 
     public void setCode(StatusEnum code) {
         this.code = code;
-        if (statusData != null) {
-            statusData.setExecutionStatus(code);
+        if (taskData != null) {
+            taskData.setExecutionStatus(code);
         }
     }
 
@@ -76,20 +76,20 @@ public class InstanceState implements Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
-        if (statusData != null) {
-            statusData.setSessionId(sessionId);
+        if (taskData != null) {
+            taskData.put("session_id", sessionId);
         }
     }
 
-    public InstanceState(TaskStatusData taskStatusData) {
-        this.fqdn = taskStatusData.getTarget();
-        this.code = taskStatusData.getExecutionStatus();
-        this.sessionId = taskStatusData.getSessionId();
-        this.statusData = taskStatusData;
+    public InstanceState(TaskData taskData) {
+        this.fqdn = taskData.getTarget();
+        this.code = taskData.getExecutionStatus();
+        this.sessionId = taskData.getString("session_id");
+        this.taskData = taskData;
     }
 
     @JsonIgnore
-    public TaskStatusData getStatusData() {
-        return statusData;
+    public TaskData getTaskData() {
+        return taskData;
     }
 }

@@ -73,6 +73,10 @@ public class WinderUtil {
     }
 
     public static JobId toJobId(String fromString) {
+        return toJobId(fromString, getEngine().getClusterName());
+    }
+
+    public static JobId toJobId(String fromString, String cluster) {
         if (fromString == null || fromString.length()==0) {
             throw new IllegalArgumentException("Job string is null or empty");
         }
@@ -89,7 +93,7 @@ public class WinderUtil {
                 parts[2] = fromString.substring(j+1);
             } else {
                 // by default, add one
-                parts[2] = getEngine().getClusterName();
+                parts[2] = cluster;
             }
         } catch(Exception e) {
             throw new IllegalArgumentException("Unable to parse jobId: " + fromString, e);

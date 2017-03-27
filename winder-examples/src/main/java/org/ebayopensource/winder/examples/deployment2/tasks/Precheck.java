@@ -56,10 +56,10 @@ public class Precheck implements Task<TaskInput, TaskResult> {
         //Set status for each task
         for(int i = 0; i < targetServers.size(); i ++) {
             InstanceState state = states.get(i);
-            TaskStatusData taskStatusData = summary.addTaskStatus(targetServers.get(i), state.getCode().name());
-            taskStatusData.setTarget(state.getFqdn());
-            taskStatusData.setAction(ctx.getCurrentStep().name());
-            taskStatusData.setExecutionStatus(StatusEnum.EXECUTING);
+            TaskData taskData = summary.addTask(targetServers.get(i), state.getCode().name());
+            taskData.setTarget(state.getFqdn());
+            taskData.setAction(ctx.getCurrentStep().name());
+            taskData.setExecutionStatus(StatusEnum.EXECUTING);
         }
 
         System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());

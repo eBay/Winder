@@ -127,7 +127,7 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
      *
      * @return jobData as Parameters
      */
-    Parameters<Object> getDataParameters();
+    Parameters<Object> getData();
 
     /**
      * Return all owner actions

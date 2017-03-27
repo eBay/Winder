@@ -24,7 +24,6 @@
  */
 package org.ebayopensource.winder.quartz;
 
-import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
 
@@ -41,119 +40,101 @@ import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.
  * @version 1.0
  */
-public class QuartzStatusData implements TaskStatusData {
-
-    private Parameters<Object> parameters;
+public class QuartzData extends ParametersMap<Object> implements TaskData {
 
     private WinderEngine engine;
 
-    public QuartzStatusData(WinderEngine engine, Parameters<Object> parameters) {
+    public QuartzData(WinderEngine engine) {
         this.engine = engine;
-        this.parameters = parameters;
+    }
+
+    public QuartzData(WinderEngine engine, Map<String, Object> map) {
+        super(map);
+        this.engine = engine;
     }
 
     public void setId(String id) {
-        parameters.put(KEY_TASK_ID, id);
+        put(KEY_TASK_ID, id);
     }
 
     @Override
     public String getId() {
-        return parameters.getString(KEY_TASK_ID);
+        return getString(KEY_TASK_ID);
     }
 
     @Override
     public String getName() {
-        return parameters.getString(KEY_TASK_NAME);
+        return getString(KEY_TASK_NAME);
     }
 
     public void setName(String name) {
-        parameters.put(KEY_TASK_NAME, name);
+        put(KEY_TASK_NAME, name);
     }
 
     @Override
     public Date getDateCreated() {
-        return parameters.getDate(KEY_TASK_DATE_CREATED);
+        return getDate(KEY_TASK_DATE_CREATED);
     }
 
     public void setDateCreated(Date created) {
-        parameters.put(KEY_TASK_DATE_CREATED, created.getTime());
+        put(KEY_TASK_DATE_CREATED, created.getTime());
     }
 
     @Override
     public Date getStartDate() {
-        return parameters.getDate(KEY_TASK_START_DATE);
+        return getDate(KEY_TASK_START_DATE);
     }
 
     @Override
     public void setStartDate(Date startTime) {
-        parameters.put(KEY_TASK_START_DATE, startTime.getTime());
+        put(KEY_TASK_START_DATE, startTime.getTime());
     }
 
     @Override
     public Date getEndDate() {
-        return parameters.getDate(KEY_TASK_END_DATE);
+        return getDate(KEY_TASK_END_DATE);
     }
 
     @Override
     public void setEndDate(Date endTime) {
-        parameters.put(KEY_TASK_END_DATE, endTime.getTime());
+        put(KEY_TASK_END_DATE, endTime.getTime());
     }
 
     @Override
     public StatusEnum getExecutionStatus() {
-        return parameters.getEnum(StatusEnum.class, KEY_TASK_STATUS, StatusEnum.UNKNOWN);
+        return getEnum(StatusEnum.class, KEY_TASK_STATUS, StatusEnum.UNKNOWN);
     }
 
     @Override
     public void setExecutionStatus(StatusEnum executionStatus) {
-        parameters.put(KEY_TASK_STATUS, executionStatus.name());
-    }
-
-    @Override
-    public String getSessionId() {
-        return parameters.getString(KEY_TASK_SESSION_ID);
-    }
-
-    @Override
-    public void setSessionId(String sessionId) {
-        parameters.put(KEY_TASK_SESSION_ID, sessionId);
+        put(KEY_TASK_STATUS, executionStatus.name());
     }
 
     @Override
     public String getTarget() {
-        return parameters.getString(KEY_TASK_TARGET);
+        return getString(KEY_TASK_TARGET);
     }
 
     @Override
     public void setTarget(String target) {
-        parameters.put(KEY_TASK_TARGET, target);
+        put(KEY_TASK_TARGET, target);
     }
 
     @Override
     public String getAction() {
-        return parameters.getString(KEY_TASK_ACTION);
+        return getString(KEY_TASK_ACTION);
     }
 
     @Override
     public void setAction(String action) {
-        parameters.put(KEY_TASK_ACTION, action);
-    }
-
-    @Override
-    public Parameters<Object> getResult() {
-        return parameters.getParameters(KEY_TASK_RESULT);
-    }
-
-    @Override
-    public void setResult(Parameters<Object> result) {
-        parameters.put(KEY_TASK_RESULT, result.toMap());
+        put(KEY_TASK_ACTION, action);
     }
 
     protected List<Map> getListOfMap(String key) {
-        List<Map> list = parameters.getList(key);
+        List<Map> list = getList(key);
         if (list == null) {
             list = new ArrayList<>(5);
-            parameters.put(key, list);
+            put(key, list);
         }
         return list;
     }
@@ -175,9 +156,5 @@ public class QuartzStatusData implements TaskStatusData {
             statusUpdates.add(new QuartzStatusUpdate(engine, new ParametersMap<>(m)));
         }
         return statusUpdates;
-    }
-
-    public Map<String, Object> toMap() {
-        return parameters.toMap();
     }
 }

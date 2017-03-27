@@ -24,7 +24,7 @@
  */
 package org.ebayopensource.deployment;
 
-import org.ebayopensource.winder.TaskStatusData;
+import org.ebayopensource.winder.TaskData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class SimpleGroupStrategy implements GroupStrategy {
     @Override
-    public List<InstanceState> getGroup(List<TaskStatusData> statuses, int groupId, int maxGroup) {
+    public List<InstanceState> getGroup(List<TaskData> statuses, int groupId, int maxGroup) {
         int total = statuses.size();
         int groupSize = total / maxGroup;
         int size = groupSize;

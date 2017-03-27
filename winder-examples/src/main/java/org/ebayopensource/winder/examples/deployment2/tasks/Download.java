@@ -58,13 +58,13 @@ public class Download implements Task<TaskInput, TaskResult> {
         int groupId = ctx.getGroupId();
 
         WinderJobSummary<TaskInput, TaskResult> summary = ctx.getJobContext().getJobSummary();
-        List<TaskStatusData> taskStatuses = summary.getAllTaskStatuses();
+        List<TaskData> taskStatuses = summary.getAllTasks();
         List<InstanceState> groupInstances = groupStrategy.getGroup(taskStatuses, groupId, 3);
 
         String step = ctx.getCurrentStep().name();
         //Set action and update information
         for(InstanceState instance: groupInstances) {
-            TaskStatusData statusData = instance.getStatusData();
+            TaskData statusData = instance.getTaskData();
             statusData.setAction(step);
             statusData.addUpdate(StatusEnum.EXECUTING, "Downloading " + software);
         }

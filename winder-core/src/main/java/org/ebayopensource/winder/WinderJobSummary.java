@@ -111,13 +111,13 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
     String getOwner();
 
 
-    TaskStatusData addTaskStatus(String taskId, String taskName);
+    TaskData addTask(String taskId, String taskName);
 
     /**
      * Return all task status
      * @return
      */
-    List<TaskStatusData> getAllTaskStatuses();
+    List<TaskData> getAllTasks();
 
 
     /**

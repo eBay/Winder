@@ -53,7 +53,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     private JobDataMap jobDataMap;
 
-    private Parameters<Object> dataAsParameters;
+    private Parameters<Object> data;
 
     private QuartzJobSummary<TI, TR> jobSummary;
 
@@ -71,9 +71,9 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         this.jobId = jobId;
         this.jobDetail = jobDetail;
         this.jobDataMap = jobDetail.getJobDataMap();
-        this.dataAsParameters = new ParametersMap<>(jobDataMap);
+        this.data = new ParametersMap<>(jobDataMap);
         this.created = dateCrated != null ? dateCrated : new Date();
-        this.jobSummary = new QuartzJobSummary<>(engine, jobId, dataAsParameters);
+        this.jobSummary = new QuartzJobSummary<>(engine, jobId, data);
     }
 
     public WinderJobSummary getSummary() {
@@ -171,27 +171,27 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     @Override
     public Date getStartTime() {
-        return dataAsParameters.getDate(KEY_JOB_START_DATE);
+        return data.getDate(KEY_JOB_START_DATE);
     }
 
     @Override
     public Date getEndTime() {
-        return dataAsParameters.getDate(KEY_JOB_END_DATE);
+        return data.getDate(KEY_JOB_END_DATE);
     }
 
     @Override
     public void setStartTime(Date date) {
-        dataAsParameters.put(KEY_JOB_START_DATE, date.getTime());
+        data.put(KEY_JOB_START_DATE, date.getTime());
     }
 
     @Override
     public void setEndTime(Date date) {
-        dataAsParameters.put(KEY_JOB_END_DATE, date.getTime());
+        data.put(KEY_JOB_END_DATE, date.getTime());
     }
 
     @Override
     public StatusEnum getStatus() {
-        return dataAsParameters.getEnum(StatusEnum.class, KEY_JOB_STATUS, StatusEnum.UNKNOWN);
+        return data.getEnum(StatusEnum.class, KEY_JOB_STATUS, StatusEnum.UNKNOWN);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         if (status == null) {
             status = StatusEnum.UNKNOWN;
         }
-        dataAsParameters.put(KEY_JOB_STATUS, status.name());
+        data.put(KEY_JOB_STATUS, status.name());
     }
 
     @Override
@@ -213,8 +213,8 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     }
 
     @Override
-    public Parameters<Object> getDataParameters() {
-        return dataAsParameters;
+    public Parameters<Object> getData() {
+        return data;
     }
 
     void setResult(TR result) {
@@ -242,12 +242,12 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     @Override
     public boolean isAwaitingForAction() {
-        return dataAsParameters.getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
+        return data.getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
     }
 
     @Override
     public void setAwaitingForAction(boolean awaitingForAction) {
-        dataAsParameters.put(KEY_JOB_IS_AWAITING_FOR_ACTION, awaitingForAction);
+        data.put(KEY_JOB_IS_AWAITING_FOR_ACTION, awaitingForAction);
     }
 
     @Override
@@ -262,7 +262,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     @Override
     public Map<String, Object> toMap() {
-        return dataAsParameters.toMap();
+        return data.toMap();
     }
 
     private static Logger log = LoggerFactory.getLogger(QuartzJobDetail.class);
@@ -270,7 +270,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     @Override
     public String toJson() {
         try {
-            return JsonUtil.writeValueAsString(dataAsParameters);
+            return JsonUtil.writeValueAsString(data);
         } catch (IOException e) {
             log.warn("Convert to json exception", e);
             throw new IllegalStateException("Illegal state");

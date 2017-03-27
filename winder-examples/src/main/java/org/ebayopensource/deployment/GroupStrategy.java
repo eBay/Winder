@@ -24,7 +24,7 @@
  */
 package org.ebayopensource.deployment;
 
-import org.ebayopensource.winder.TaskStatusData;
+import org.ebayopensource.winder.TaskData;
 
 import java.util.List;
 
@@ -44,5 +44,5 @@ public interface GroupStrategy {
      * @param maxGroup maximum group number
      * @return The group of Instances
      */
-    List<InstanceState> getGroup(List<TaskStatusData> statuses, int groupId, int maxGroup);
+    List<InstanceState> getGroup(List<TaskData> statuses, int groupId, int maxGroup);
 }
