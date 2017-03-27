@@ -96,10 +96,9 @@ public class QuartzJobDetailFactory implements WinderJobDetailFactory {
         }
 
         JobDataMap map = new JobDataMap();
-        String jobInput = input.toJson();
 
         map.put(KEY_JOB_DATE_CREATED, createDate.getTime());
-        map.put(KEY_JOB_INPUT, jobInput);
+        map.put(KEY_JOB_INPUT, input.toMap());
         map.put(KEY_JOB_STATUS, StatusEnum.SUBMITTED.toString());
         map.put(KEY_JOB_CLASS, clazz.getName());
         map.put(KEY_JOB_STEP, firstStep);

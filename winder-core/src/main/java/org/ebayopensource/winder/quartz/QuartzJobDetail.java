@@ -27,12 +27,15 @@ package org.ebayopensource.winder.quartz;
 import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
+import org.ebayopensource.winder.util.JsonUtil;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
@@ -58,8 +61,6 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     private Date created;
 
-//    private static Logger log = LoggerFactory.getLogger(QuartzJobDetail.class);
-
     public QuartzJobDetail(WinderEngine engine, JobId jobId, JobDetail jobDetail) {
         this(engine, jobId, jobDetail, null);
     }
@@ -70,7 +71,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         this.jobId = jobId;
         this.jobDetail = jobDetail;
         this.jobDataMap = jobDetail.getJobDataMap();
-        this.dataAsParameters = new ParametersMap<>(jobDetail.getJobDataMap());
+        this.dataAsParameters = new ParametersMap<>(jobDataMap);
         this.created = dateCrated != null ? dateCrated : new Date();
         this.jobSummary = new QuartzJobSummary<>(engine, jobId, dataAsParameters);
     }
@@ -170,36 +171,27 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     @Override
     public Date getStartTime() {
-        long l = jobDataMap.getLong(KEY_JOB_START_DATE);
-        return l > 0 ? new Date(l) : null;
+        return dataAsParameters.getDate(KEY_JOB_START_DATE);
     }
 
     @Override
     public Date getEndTime() {
-        long l = jobDataMap.getLong(KEY_JOB_END_DATE);
-        return l > 0 ? new Date(l) : null;
+        return dataAsParameters.getDate(KEY_JOB_END_DATE);
     }
 
     @Override
     public void setStartTime(Date date) {
-        jobDataMap.put(KEY_JOB_START_DATE, date.getTime());
+        dataAsParameters.put(KEY_JOB_START_DATE, date.getTime());
     }
 
     @Override
     public void setEndTime(Date date) {
-        jobDataMap.put(KEY_JOB_END_DATE, date.getTime());
+        dataAsParameters.put(KEY_JOB_END_DATE, date.getTime());
     }
 
     @Override
     public StatusEnum getStatus() {
-        String value = jobDataMap.getString(KEY_JOB_STATUS);
-        if (value != null) {
-            try {
-                return StatusEnum.valueOf(value.toUpperCase());
-            } catch (Exception ex) {
-            }
-        }
-        return StatusEnum.UNKNOWN;
+        return dataAsParameters.getEnum(StatusEnum.class, KEY_JOB_STATUS, StatusEnum.UNKNOWN);
     }
 
     @Override
@@ -207,7 +199,7 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         if (status == null) {
             status = StatusEnum.UNKNOWN;
         }
-        jobDataMap.put(KEY_JOB_STATUS, status.name());
+        dataAsParameters.put(KEY_JOB_STATUS, status.name());
     }
 
     @Override
@@ -250,12 +242,12 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
 
     @Override
     public boolean isAwaitingForAction() {
-        return jobDataMap.getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
+        return dataAsParameters.getBoolean(KEY_JOB_IS_AWAITING_FOR_ACTION);
     }
 
     @Override
     public void setAwaitingForAction(boolean awaitingForAction) {
-        jobDataMap.put(KEY_JOB_IS_AWAITING_FOR_ACTION, awaitingForAction);
+        dataAsParameters.put(KEY_JOB_IS_AWAITING_FOR_ACTION, awaitingForAction);
     }
 
     @Override
@@ -266,6 +258,23 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     @Override
     public StatusUpdate addUpdate(StatusEnum status, String message) {
         return jobSummary.addUpdate(status, message);
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return dataAsParameters.toMap();
+    }
+
+    private static Logger log = LoggerFactory.getLogger(QuartzJobDetail.class);
+
+    @Override
+    public String toJson() {
+        try {
+            return JsonUtil.writeValueAsString(dataAsParameters);
+        } catch (IOException e) {
+            log.warn("Convert to json exception", e);
+            throw new IllegalStateException("Illegal state");
+        }
     }
 
     public JobDetail getJobDetail() {

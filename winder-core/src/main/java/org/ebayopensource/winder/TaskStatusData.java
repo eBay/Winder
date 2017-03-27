@@ -44,13 +44,13 @@ public interface TaskStatusData {
 
     Date getDateCreated();
 
-    Date getStartTime();
+    Date getStartDate();
 
-    void setStartTime(Date startTime);
+    void setStartDate(Date startTime);
 
-    Date getEndTime();
+    Date getEndDate();
 
-    void setEndTime(Date endTime);
+    void setEndDate(Date endTime);
 
     StatusEnum getExecutionStatus();
 

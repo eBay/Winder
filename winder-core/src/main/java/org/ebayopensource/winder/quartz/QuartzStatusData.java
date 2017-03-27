@@ -72,31 +72,31 @@ public class QuartzStatusData implements TaskStatusData {
 
     @Override
     public Date getDateCreated() {
-        return parameters.getDate(KEY_TASK_CREATED);
+        return parameters.getDate(KEY_TASK_DATE_CREATED);
     }
 
     public void setDateCreated(Date created) {
-        parameters.put(KEY_TASK_CREATED, created.getTime());
+        parameters.put(KEY_TASK_DATE_CREATED, created.getTime());
     }
 
     @Override
-    public Date getStartTime() {
-        return parameters.getDate(KEY_TASK_START_TIME);
+    public Date getStartDate() {
+        return parameters.getDate(KEY_TASK_START_DATE);
     }
 
     @Override
-    public void setStartTime(Date startTime) {
-        parameters.put(KEY_TASK_START_TIME, startTime.getTime());
+    public void setStartDate(Date startTime) {
+        parameters.put(KEY_TASK_START_DATE, startTime.getTime());
     }
 
     @Override
-    public Date getEndTime() {
-        return parameters.getDate(KEY_TASK_END_TIME);
+    public Date getEndDate() {
+        return parameters.getDate(KEY_TASK_END_DATE);
     }
 
     @Override
-    public void setEndTime(Date endTime) {
-        parameters.put(KEY_TASK_END_TIME, endTime.getTime());
+    public void setEndDate(Date endTime) {
+        parameters.put(KEY_TASK_END_DATE, endTime.getTime());
     }
 
     @Override

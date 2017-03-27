@@ -295,7 +295,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
 
         // Create trigger
         Trigger t = createStagedTrigger(input.getStepInterval(), input.getJobDuration(),
-                input.getJobStartTime(), jobId);
+                input.getJobScheduleTime(), jobId);
 
 
         // Child job was scheduled, add child job id to list in parent context
@@ -338,7 +338,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
     public JobId scheduleJob(TI input) throws WinderScheduleException {
         WinderJobDetail jd = jobDetailFactory.createJobDetail(input);
 
-        Date jobStartTime = input.getJobStartTime();
+        Date jobStartTime = input.getJobScheduleTime();
         Trigger t = createStagedTrigger(input.getStepInterval(),
                 input.getJobDuration(), jobStartTime, jd.getJobId());
         try {
@@ -429,7 +429,7 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         WinderJobDetail jd = jobDetailFactory.createJobDetail(input);
 
         JobId jobId = jd.getJobId();
-        Date startTime = input.getJobStartTime();
+        Date startTime = input.getJobScheduleTime();
         Trigger t = TriggerBuilder.newTrigger().withIdentity(cronJobTriggerName(jobId), TRIGGER_GROUP_CRON)
                 .forJob(jobId.getName(), jobId.getGroup()).startAt(startTime)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();

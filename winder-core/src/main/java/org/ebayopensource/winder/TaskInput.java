@@ -88,7 +88,7 @@ public interface TaskInput extends Parameters<Object> {
      *
      * @return Job start time
      */
-    Date getJobStartTime();
+    Date getJobScheduleTime();
 
 
     /**

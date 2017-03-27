@@ -47,8 +47,8 @@ public class WinderTaskInputTest {
         assertEquals("owner", input.getJobOwner());
         input.setStepInterval(10000);
         assertEquals(10000, input.getStepInterval());
-        input.getJobStartTime();
-        input.setJobStartTime(new Date());
+        input.getJobScheduleTime();
+        input.setJobScheduleTime(new Date());
         input.put("test", "abc");
         assertTrue(input.toJson().contains("\"test\":\"abc\""));
     }

@@ -48,6 +48,7 @@ public interface QuartzWinderConstants {
     String KEY_JOB_OWNER = "job_owner";
     String KEY_JOB_TARGET = "job_target";
     String KEY_JOB_ACTION = "job_action";
+    String KEY_JOB_ID = "job_id";
 
     String KEY_JOB_IS_AWAITING_FOR_ACTION = "job_awaiting_for_action";
 
@@ -59,7 +60,6 @@ public interface QuartzWinderConstants {
     String KEY_EXECUTION_STATUS = "execution_status";
     String KEY_ACTION = "action";
     String KEY_OWNER = "owner";
-
 
     String DATA_STATUS_UPDATES = "status_updates";
 
@@ -77,9 +77,9 @@ public interface QuartzWinderConstants {
     String KEY_TASK_TARGET = "target";
     String KEY_TASK_RESULT = "result";
     String KEY_TASK_SESSION_ID = "session_id";
-    String KEY_TASK_CREATED = "created";
-    String KEY_TASK_START_TIME = "start_time";
-    String KEY_TASK_END_TIME = "end_time";
+    String KEY_TASK_DATE_CREATED = "date_created";
+    String KEY_TASK_START_DATE = "start_date";
+    String KEY_TASK_END_DATE = "end_date";
     String KEY_TASK_STATUS = "status";
 
     String KEY_AUTO_PAUSE = "auto_pause";

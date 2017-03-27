@@ -25,6 +25,7 @@
 package org.ebayopensource.winder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Job summary, it only has some basic information
@@ -112,12 +113,17 @@ public interface WinderJobSummary<TI extends TaskInput, TR extends TaskResult> {
 
     TaskStatusData addTaskStatus(String taskId, String taskName);
 
-
-//    TaskStatusData getTaskStatus(String taskId);
-
     /**
      * Return all task status
      * @return
      */
     List<TaskStatusData> getAllTaskStatuses();
+
+
+    /**
+     * Convert to Map so that it can be converted to JSON easily
+     *
+     * @return Convert to Map so that it can be converted to JSON easily
+     */
+    Map<String, Object> toMap();
 }

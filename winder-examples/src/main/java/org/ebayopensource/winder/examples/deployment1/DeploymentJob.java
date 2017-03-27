@@ -55,6 +55,8 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
             List<InstanceState> instances = deploymentAPI.preCheck(fqdns);
             result.put("instances", instances);
             ctx.setCurrentStep(DOWNLOAD);
+
+            System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         }
     },
 
@@ -73,6 +75,8 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
             deploymentAPI.download(instances, software);
             result.put("last_step", ctx.getCurrentStep().name());
             ctx.setCurrentStep(VALIDATE);
+
+            System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         }
     },
 
@@ -100,6 +104,8 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
                     ctx.setCurrentStep(DONE);
                 }
             }
+
+            System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
         }
     },
 
@@ -127,6 +133,7 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
                     instance.setCode(StatusEnum.COMPLETED);
                 }
             }
+            System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
             System.out.println("All done!");
         }
     },
@@ -134,7 +141,8 @@ public enum DeploymentJob implements Step<TaskInput, TaskResult, TaskContext<Tas
     @ErrorStep
     ERROR(400) {
         @Override
-        public void execute(TaskContext<TaskInput, TaskResult> context) throws Exception {
+        public void execute(TaskContext<TaskInput, TaskResult> ctx) throws Exception {
+            System.out.println("JobDetail:==========================\r\n" + ctx.getJobContext().getJobDetail().toJson());
             System.out.println("ERROR");
         }
     };

@@ -157,7 +157,7 @@ public abstract class AbstractParameters<V> extends AbstractMap<String, V>
             }
             return list;
         }
-        else if (obj.getClass().isArray()) {
+        else if (obj != null && obj.getClass().isArray()) {
             int len = Array.getLength(obj);
             List<T> list = new ArrayList<>(len);
             for (int i = 0; i < len; i++) {

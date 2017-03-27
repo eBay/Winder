@@ -41,13 +41,17 @@ import java.util.Date;
  */
 public class WinderTaskInput extends ParametersMap<Object> implements TaskInput {
 
+    public static final String JOB_SCHEDULE_TIME = "job_schedule_time";
+    public static final String JOB_DURATION = "job_duration";
+    public static final String JOB_STEP_INTERVAL = "job_step_interval";
+
     private Class jobClass;
     private String jobType;
     private String jobGroup;
     private String jobOwner = "unknownUser";
     private int stepInterval = 10;
     private int jobDuration = 24 * 60 * 60;
-    private Date jobStartTime;
+    private Date jobScheduleTime;
 
     public WinderTaskInput() {
     }
@@ -86,7 +90,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setStepInterval(int stepInterval) {
         this.stepInterval = stepInterval;
-        put("winder_step_interval", stepInterval);
+        put(JOB_STEP_INTERVAL, stepInterval);
     }
 
     @Override
@@ -96,21 +100,19 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
 
     public void setJobDuration(int jobDuration) {
         this.jobDuration = jobDuration;
-        put("winder_job_duration", jobDuration);
+        put(JOB_DURATION, jobDuration);
     }
 
     @Override
-    public Date getJobStartTime() {
-        if (jobStartTime == null) {
-            long startTime = getLong("winder_job_start_time", -1);
-            if (startTime > 0) {
-                jobStartTime = new Date(startTime);
-            }
-            else {
-                jobStartTime = new Date();
+    public Date getJobScheduleTime() {
+        if (jobScheduleTime == null) {
+            jobScheduleTime = getDate(JOB_SCHEDULE_TIME);
+            if (jobScheduleTime == null) {
+                jobScheduleTime = new Date();
+                put(JOB_SCHEDULE_TIME, jobScheduleTime);
             }
         }
-        return jobStartTime;
+        return jobScheduleTime;
     }
 
     private static Logger log = LoggerFactory.getLogger(WinderTaskInput.class);
@@ -125,9 +127,9 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
         }
     }
 
-    public void setJobStartTime(Date jobStartTime) {
-        this.jobStartTime = jobStartTime;
-        put("winder_job_start_time", jobStartTime.getTime());
+    public void setJobScheduleTime(Date jobScheduleTime) {
+        this.jobScheduleTime = jobScheduleTime;
+        put(JOB_SCHEDULE_TIME, jobScheduleTime.getTime());
     }
 
     @Override

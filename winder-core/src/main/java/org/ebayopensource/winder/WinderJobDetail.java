@@ -28,6 +28,7 @@ import org.ebayopensource.common.util.Parameters;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Winder Job Detail, it has all the information of the job
@@ -179,4 +180,18 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
      * @param message Message
      */
     StatusUpdate addUpdate(StatusEnum status, String message);
+
+    /**
+     * Convert to Map so that it can be converted to JSON easily
+     *
+     * @return Convert to Map so that it can be converted to JSON easily
+     */
+    Map<String, Object> toMap();
+
+    /**
+     * To Json
+     *
+     * @return Convert the input parameters to Json
+     */
+    String toJson();
 }

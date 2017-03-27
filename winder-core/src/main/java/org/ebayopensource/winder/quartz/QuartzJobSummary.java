@@ -62,6 +62,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
         this.engine = engine;
         this.jobId = jobId;
         this.dataAsParameters = dataAsParameters;
+        dataAsParameters.put(KEY_JOB_ID, jobId.toString());
         this.maxStack = engine.getConfiguration().getInt("winder.job.maxStack", 512);
     }
 
@@ -265,7 +266,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public void setTaskInput(TI taskInput) {
         this.taskInput = taskInput;
-        dataAsParameters.put(KEY_JOB_INPUT, taskInput.toJson());
+        dataAsParameters.put(KEY_JOB_INPUT, taskInput.toMap());
     }
 
     @Override
@@ -302,5 +303,10 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
             statusDatas.add(new QuartzStatusData(engine, new ParametersMap<>(m)));
         }
         return statusDatas;
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return dataAsParameters.toMap();
     }
 }
