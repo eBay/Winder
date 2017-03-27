@@ -28,7 +28,6 @@ import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.UserAction;
 import org.ebayopensource.winder.UserActionType;
 import org.ebayopensource.winder.WinderEngine;
-import org.quartz.JobDataMap;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 

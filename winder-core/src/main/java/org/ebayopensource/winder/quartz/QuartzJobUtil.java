@@ -25,18 +25,6 @@
 package org.ebayopensource.winder.quartz;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ebayopensource.winder.*;
-import org.quartz.JobDataMap;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
-
 /**
  *
  * @author Sheldon Shao xshao@ebay.com on 10/16/16.

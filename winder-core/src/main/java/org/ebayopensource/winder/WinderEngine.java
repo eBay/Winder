@@ -52,7 +52,7 @@ public interface WinderEngine {
 //    String formatDate(Date date);
 
 
-    Date parseDateFromObject(Object str);
+//    Date parseDateFromObject(Object str);
 
     /**
      * Return configuration

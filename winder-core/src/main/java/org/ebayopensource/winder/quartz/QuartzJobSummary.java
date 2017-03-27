@@ -24,15 +24,12 @@
  */
 package org.ebayopensource.winder.quartz;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.common.util.ParametersMap;
 import org.ebayopensource.winder.*;
-import org.ebayopensource.winder.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;

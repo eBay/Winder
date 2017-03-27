@@ -28,6 +28,7 @@ import org.ebayopensource.common.util.Parameters;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Task Status Data
@@ -74,4 +75,6 @@ public interface TaskStatusData {
     StatusUpdate addUpdate(StatusEnum executionStatus, String statusMessage);
 
     List<StatusUpdate> getUpdates();
+
+    Map<String, Object> toMap();
 }

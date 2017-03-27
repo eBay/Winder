@@ -25,7 +25,6 @@
 package org.ebayopensource.winder.quartz;
 
 import org.ebayopensource.common.util.ParametersMap;
-import org.ebayopensource.common.util.PropertyParameters;
 import org.ebayopensource.winder.WinderConfiguration;
 
 import java.util.Properties;

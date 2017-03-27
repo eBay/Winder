@@ -118,11 +118,11 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public String getStatusMessage() {
-        return objectParameters.getString(KEY_JOB_STATUS_MSG, "");
+        return objectParameters.getString(KEY_JOB_STATUS_MESSAGE, "");
     }
 
     public void setStatusMessage(String msg) {
-        objectParameters.put(KEY_JOB_STATUS_MSG, (msg == null) ? "" : msg);
+        objectParameters.put(KEY_JOB_STATUS_MESSAGE, (msg == null) ? "" : msg);
     }
 
     public void setStatusMessage(String msg, Throwable t) {
@@ -162,7 +162,7 @@ public class QuartzJobContext implements WinderJobContext {
 
     public void done(StatusEnum status) {
         if (status != StatusEnum.UNKNOWN) {
-            objectParameters.put(KEY_JOB_STATUS, String.valueOf(status));
+            objectParameters.put(KEY_JOB_STATUS, status.name());
         }
         Date endDate = new Date();
         jobDetail.setEndTime(endDate);
@@ -189,17 +189,7 @@ public class QuartzJobContext implements WinderJobContext {
     }
 
     public StatusEnum getJobStatus() {
-        String statusName = objectParameters.getString(KEY_JOB_STATUS);
-        if (statusName == null) {
-            return StatusEnum.UNKNOWN;
-        }
-        StatusEnum result;
-        try {
-            result = StatusEnum.valueOf(statusName);
-        } catch (Exception e) {
-            return StatusEnum.UNKNOWN;
-        }
-        return result;
+        return objectParameters.getEnum(StatusEnum.class, KEY_JOB_STATUS, StatusEnum.UNKNOWN);
     }
 
     public void setJobStatus(StatusEnum status) {
