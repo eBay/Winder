@@ -95,7 +95,7 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
         if (result == null) {
             return (TR)new WinderTaskResult();
         }
-        if (result instanceof TaskInput) {
+        if (result instanceof TaskResult) {
             return (TR)result;
         }
         else {

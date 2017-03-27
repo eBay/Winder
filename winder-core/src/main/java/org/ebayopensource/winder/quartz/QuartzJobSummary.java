@@ -233,7 +233,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
                 taskResult = (TR) new WinderTaskResult(result);
             }
             else {
-                taskResult = (TR)new WinderTaskResult();
+                setTaskResult((TR)new WinderTaskResult());
             }
         }
         return taskResult;

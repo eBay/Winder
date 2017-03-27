@@ -24,6 +24,7 @@
  */
 package org.ebayopensource.deployment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.ebayopensource.winder.StatusEnum;
 import org.ebayopensource.winder.TaskStatusData;
 
@@ -87,6 +88,7 @@ public class InstanceState implements Serializable {
         this.statusData = taskStatusData;
     }
 
+    @JsonIgnore
     public TaskStatusData getStatusData() {
         return statusData;
     }
