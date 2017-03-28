@@ -147,6 +147,12 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
 
                 if (enableQuartz) {
                     String tablePrefix = configuration.getString("winder.quartz.ds.table_prefix", "WINDER_");
+
+                    reformat(SELECT_JOBS_LIMIT, tablePrefix);
+                    reformat(SELECT_JOBS_LIMIT_BY_DATE_RANGE, tablePrefix);
+                    reformat(SELECT_JOBS_LIMIT_LIKE, tablePrefix);
+                    reformat(SELECT_JOBS_LIMIT_LIKE_BY_DATE_RANGE, tablePrefix);
+
                     int checkInterval = configuration.getInt("winder.quartz.checkin_interval", 7500);
                     String clusterName = engine.getClusterName();
                     JobStoreTX jdbcJobStore = new WinderJobStoreTx();
@@ -661,28 +667,34 @@ public class QuartzSchedulerManager<TI extends TaskInput> implements WinderSched
         return limit(jobs, filter);
     }
 
-    private static final String[] SELECT_JOBS_LIMIT = new String[] {
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_NAME = ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_GROUP = ? ORDER BY JOB_CREATED DESC LIMIT ?, ?"
+    private static void reformat(String[] array, String prefix) {
+        for(int i = 0; i < array.length; i ++) {
+            array[i] = array[i].replace("{0}", prefix);
+        }
+    }
+
+    private final String[] SELECT_JOBS_LIMIT = new String[] {
+            "SELECT * FROM {0}JOB_DETAILS ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_NAME = ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_GROUP = ? ORDER BY JOB_CREATED DESC LIMIT ?, ?"
     };
 
-    private static final String[] SELECT_JOBS_LIMIT_BY_DATE_RANGE = new String[] {
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_NAME = ? AND JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_GROUP = ? AND JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?"
+    private final String[] SELECT_JOBS_LIMIT_BY_DATE_RANGE = new String[] {
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_NAME = ? AND JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_GROUP = ? AND JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?"
     };
 
-    private static final String[] SELECT_JOBS_LIMIT_LIKE = new String[] {
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_NAME LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_GROUP LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?"
+    private final String[] SELECT_JOBS_LIMIT_LIKE = new String[] {
+            "SELECT * FROM {0}JOB_DETAILS ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_NAME LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_GROUP LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?"
     };
 
-    private static final String[] SELECT_JOBS_LIMIT_LIKE_BY_DATE_RANGE = new String[] {
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? AND JOB_NAME LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?",
-            "SELECT * FROM WINDER_QRTZ_JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? AND JOB_GROUP LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?"
+    private final String[] SELECT_JOBS_LIMIT_LIKE_BY_DATE_RANGE = new String[] {
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? AND JOB_NAME LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?",
+            "SELECT * FROM {0}JOB_DETAILS WHERE JOB_CREATED >= ? AND JOB_CREATED < ? AND JOB_GROUP LIKE '%?%' ORDER BY JOB_CREATED DESC LIMIT ?, ?"
     };
 
     public List<WinderJobDetail> selectJobs(JobFilter filter) throws WinderScheduleException {
