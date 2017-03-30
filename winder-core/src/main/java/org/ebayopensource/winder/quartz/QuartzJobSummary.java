@@ -32,10 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
@@ -228,7 +225,7 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public TR getTaskResult() {
         if (taskResult == null) {
-            Parameters<Object> result = data.getParameters(KEY_JOB_RESULT);
+            Map<String, Object> result = (Map<String, Object>)data.get(KEY_JOB_RESULT);
             if (result != null) {
                 taskResult = (TR) new WinderTaskResult(result);
             }
@@ -248,10 +245,10 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
     @Override
     public TI getTaskInput() {
         if (taskInput == null) {
-            Parameters<Object> input = data.getParameters(KEY_JOB_INPUT);
+            Map<String, Object> input = (Map<String, Object>)data.get(KEY_JOB_INPUT);
             String jobClass = data.getString(KEY_JOB_CLASS);
             try {
-                WinderTaskInput ti = new WinderTaskInput(input != null ? input : new ParametersMap<>());
+                WinderTaskInput ti = new WinderTaskInput(input != null ? input : new HashMap<String, Object>());
                 ti.setJobOwner(getOwner());
                 ti.setJobClass(Class.forName(jobClass));
                 taskInput = (TI)ti;

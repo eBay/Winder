@@ -25,7 +25,6 @@
 package org.ebayopensource.winder;
 
 import org.ebayopensource.common.config.PropertyUtil;
-import org.ebayopensource.common.util.Parameters;
 import org.ebayopensource.winder.metadata.JobMetadata;
 import org.ebayopensource.winder.metadata.StepMetadata;
 import org.slf4j.Logger;
@@ -78,29 +77,8 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
 
         jobMetadata = engine.getStepRegistry().getMetadata(jobClass);
 
-        taskInput = initInput(jobDetail.getInput());
-        taskResult = initResult(jobDetail.getResult());
-    }
-
-    protected TI initInput(Parameters<Object> input) {
-        if (input instanceof TaskInput) {
-            return (TI)input;
-        }
-        else {
-            return (TI) new WinderTaskInput(input);
-        }
-    }
-
-    protected TR initResult(Parameters<Object> result) {
-        if (result == null) {
-            return (TR)new WinderTaskResult();
-        }
-        if (result instanceof TaskResult) {
-            return (TR)result;
-        }
-        else {
-            return (TR) new WinderTaskResult(result);
-        }
+        taskInput = (TI)(jobDetail.getInput());
+        taskResult = (TR)(jobDetail.getResult());
     }
 
     public boolean isForceBreak() {

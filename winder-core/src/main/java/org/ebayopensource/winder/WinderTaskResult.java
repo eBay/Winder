@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Sheldon Shao xshao@ebay.com on 10/19/16.
@@ -44,7 +45,7 @@ public class WinderTaskResult extends ParametersMap<Object> implements TaskResul
 
     }
 
-    public WinderTaskResult(Parameters<Object> result) {
+    public WinderTaskResult(Map<String, Object> result) {
         super(result);
     }
 

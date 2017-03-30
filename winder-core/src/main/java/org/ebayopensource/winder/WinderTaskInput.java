@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Winder Task Input
@@ -61,7 +62,7 @@ public class WinderTaskInput extends ParametersMap<Object> implements TaskInput 
         setJobClass(jobClass);
     }
 
-    public WinderTaskInput(Parameters<Object> map) {
+    public WinderTaskInput(Map<String, Object> map) {
         super(map);
     }
 
