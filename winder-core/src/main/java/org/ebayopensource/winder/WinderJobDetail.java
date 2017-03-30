@@ -194,4 +194,9 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
      * @return Convert the input parameters to Json
      */
     String toJson();
+
+    /**
+     * Sync the changes in JobDataMap
+     */
+    void sync();
 }

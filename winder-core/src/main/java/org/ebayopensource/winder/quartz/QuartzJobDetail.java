@@ -161,7 +161,6 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
     @Override
     public void setAutoPause(boolean autoPause) {
         jobSummary.getTaskInput().put(KEY_AUTO_PAUSE, autoPause);
-        jobSummary.setTaskInput(jobSummary.getTaskInput());
     }
 
     @Override
@@ -217,14 +216,6 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         return data;
     }
 
-    void setResult(TR result) {
-        jobSummary.setTaskResult(result);
-    }
-
-    void setInput(TI taskInput) {
-        jobSummary.setTaskInput(taskInput);
-    }
-
     @Override
     public List<UserAction> getUserActions() {
         return jobSummary.getUserActions();
@@ -274,6 +265,18 @@ public class QuartzJobDetail<TI extends TaskInput, TR extends TaskResult> implem
         } catch (IOException e) {
             log.warn("Convert to json exception", e);
             throw new IllegalStateException("Illegal state");
+        }
+    }
+
+    @Override
+    public void sync() {
+        Object value = jobDataMap.get(KEY_JOB_RESULT);
+        if (value != null) {
+            jobDataMap.put(KEY_JOB_RESULT, value);
+        }
+        value = jobDataMap.get(KEY_JOB_INPUT);
+        if (value != null) {
+            jobDataMap.put(KEY_JOB_INPUT, value);
         }
     }
 

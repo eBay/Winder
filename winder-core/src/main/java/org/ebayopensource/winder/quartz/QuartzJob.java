@@ -117,6 +117,8 @@ public class QuartzJob implements Job {
         }
 
         if (job != null) {
+            runtimeDetail.sync();
+
             StatusEnum executionResultStatus = ctx.getJobStatus();
 
             if (!executionResultStatus.isDone()) { // Merge the status from DB and
