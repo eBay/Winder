@@ -72,8 +72,7 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
     }
 
     protected void init() throws WinderScheduleException {
-        WinderSchedulerManager schedulerManager = engine.getSchedulerManager();
-        jobDetail = schedulerManager.getJobDetail(jobContext.getJobId());
+        jobDetail = jobContext.getJobDetail();
 
         jobMetadata = engine.getStepRegistry().getMetadata(jobClass);
 

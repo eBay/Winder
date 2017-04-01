@@ -42,10 +42,10 @@ import static org.ebayopensource.winder.quartz.QuartzWinderConstants.*;
 
 public class QuartzJobContext implements WinderJobContext {
 
-    private final JobExecutionContext quartzCtx;
-    private final QuartzJobDetail jobDetail;
-    private final WinderJobSummary summary;
-    private final QuartzJobId jobId;
+    private JobExecutionContext quartzCtx;
+    private WinderJobDetail jobDetail;
+    private WinderJobSummary summary;
+    private JobId jobId;
     private Trigger trigger;
 
     private WinderSchedulerManager scheduler;
@@ -57,19 +57,22 @@ public class QuartzJobContext implements WinderJobContext {
     private int initStep = 0;
     private int maxStep = 100000;
 
-    private final Parameters<Object> objectParameters;
+    private Parameters<Object> objectParameters;
 
-    public QuartzJobContext(WinderEngine winderEngine, JobExecutionContext qctx) {
+    public QuartzJobContext(WinderEngine winderEngine, JobExecutionContext qctx, WinderJobDetail jobDetail) {
         this.winderEngine = winderEngine;
         this.scheduler = winderEngine.getSchedulerManager();
         quartzCtx = qctx;
 
-        JobDetail jd = quartzCtx.getJobDetail();
-        jobId = new QuartzJobId(jd.getKey(), winderEngine.getClusterName());
-        jobDetail = new QuartzJobDetail(winderEngine, jobId, jd);
+        this.jobDetail = jobDetail;
+        this.jobId = jobDetail.getJobId();
+        init(jobDetail);
+    }
+
+    private void init(WinderJobDetail jobDetail) {
         summary = jobDetail.getSummary();
 
-        trigger = quartzCtx.getTrigger();
+        this.trigger = quartzCtx.getTrigger();
         if (trigger == null) {
             throw new IllegalStateException("missing trigger");
         }
@@ -81,6 +84,17 @@ public class QuartzJobContext implements WinderJobContext {
         objectParameters = jobDetail.getData();
     }
 
+    public QuartzJobContext(WinderEngine winderEngine, JobExecutionContext qctx) {
+        this.winderEngine = winderEngine;
+        this.scheduler = winderEngine.getSchedulerManager();
+        quartzCtx = qctx;
+
+        JobDetail jd = quartzCtx.getJobDetail();
+        jobId = new QuartzJobId(jd.getKey(), winderEngine.getClusterName());
+        jobDetail = new QuartzJobDetail(winderEngine, jobId, jd);
+        init(jobDetail);
+    }
+
     public <TI extends TaskInput, TR extends TaskResult>  WinderJobDetail<TI, TR> getJobDetail() {
         return jobDetail;
     }
@@ -90,7 +104,7 @@ public class QuartzJobContext implements WinderJobContext {
         return winderEngine;
     }
 
-    public QuartzJobId getJobId() {
+    public JobId getJobId() {
         return jobId;
     }
 
@@ -148,17 +162,9 @@ public class QuartzJobContext implements WinderJobContext {
         objectParameters.put(KEY_JOB_IS_AWAITING_FOR_ACTION, isAwaiting);
     }
 
-//    public void setComplete() {
-//        markJobCompleteAndUnschedule(StatusEnum.COMPLETED);
-//    }
-
     public void setError() {
         done(StatusEnum.ERROR);
     }
-
-//    public void setCompleteWithWarning() {
-//        done(StatusEnum.WARNING);
-//    }
 
     public void done(StatusEnum status) {
         if (status != StatusEnum.UNKNOWN) {

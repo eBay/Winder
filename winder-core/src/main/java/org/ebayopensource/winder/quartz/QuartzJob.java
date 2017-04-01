@@ -47,8 +47,18 @@ public class QuartzJob implements Job {
         JobDataMap runtimeMap = quartzJobDetail.getJobDataMap();
 
         WinderEngine engine = QuartzEngine.getInstance();
-        QuartzJobContext ctx = new QuartzJobContext(engine, context);
-        WinderJobDetail runtimeDetail = ctx.getJobDetail();
+        QuartzJobContext ctx = null;
+
+        WinderJobDetail runtimeDetail;
+        if (quartzJobDetail instanceof WinderJobDetail) {
+            runtimeDetail = (WinderJobDetail)quartzJobDetail;
+            ctx = new QuartzJobContext(engine, context, runtimeDetail);
+        }
+        else {
+            ctx = new QuartzJobContext(engine, context);
+            runtimeDetail = ctx.getJobDetail();
+        }
+
         String className = runtimeMap.getString(KEY_JOB_CLASS);
 
         WinderJob job = null;

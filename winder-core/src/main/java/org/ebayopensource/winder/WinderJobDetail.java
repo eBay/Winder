@@ -199,4 +199,7 @@ public interface WinderJobDetail<TI extends TaskInput, TR extends TaskResult> ex
      * Sync the changes in JobDataMap
      */
     void sync();
+
+
+    WinderJobSummary getSummary();
 }
