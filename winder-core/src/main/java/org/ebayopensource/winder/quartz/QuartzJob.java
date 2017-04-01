@@ -58,7 +58,14 @@ public class QuartzJob implements Job {
                 throw new IllegalArgumentException("Missing job class name");
             }
 
-            Class clazz = Class.forName(className);
+            Class clazz = null;
+            try {
+                clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+            }
+            catch(Exception ex) {
+                clazz = Class.forName(className);
+            }
+
             if (Step.class.isAssignableFrom(clazz)) { //Multiple steps
                 job = new WinderStair(engine, clazz);
             }

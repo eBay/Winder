@@ -250,7 +250,15 @@ public class QuartzJobSummary<TI extends TaskInput, TR extends TaskResult> imple
             try {
                 WinderTaskInput ti = new WinderTaskInput(input != null ? input : new HashMap<String, Object>());
                 ti.setJobOwner(getOwner());
-                ti.setJobClass(Class.forName(jobClass));
+
+                Class clazz = null;
+                try {
+                    clazz = Thread.currentThread().getContextClassLoader().loadClass(jobClass);
+                }
+                catch(Exception ex) {
+                    clazz = Class.forName(jobClass);
+                }
+                ti.setJobClass(clazz);
                 taskInput = (TI)ti;
             }
             catch (ClassNotFoundException e) {
