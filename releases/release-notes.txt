@@ -7,10 +7,10 @@ Winder Release Notes
   even in a 20 instances quartz cluster + mysql.
   Winder will target to rise this ceiling.
 
-0.2.0 Road Map
+0.2.0
 
-* Internal crontab and scheduler support
-* Web management
+* Support mysql DB
+* Fixed couple bugs
 
 0.1.0
 
