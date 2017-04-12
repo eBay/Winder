@@ -84,6 +84,9 @@ public class WinderStair implements WinderJob {
             while (stepCount < maxSteps) {
                 //Load the context from DB again, because other instance may cancel the job.
                 Step currentStep = taskContext.getCurrentStep();
+                if (currentStep == null) {
+                    break;
+                }
                 StepMetadata metadata = taskContext.getStepMetadata();
 
                 if (doExecute(currentStep, taskContext, ctx)) {

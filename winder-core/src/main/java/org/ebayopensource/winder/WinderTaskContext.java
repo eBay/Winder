@@ -139,8 +139,9 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
             log.debug(String.format("Job {%s} status is: {%s} nextStep is {%s}", getJobId(),
                     getJobStatus(), step));
         }
-        stepMetadata = jobMetadata.getStep(step.code());
-        jobContext.setJobStep(step.code());
+        int code = step.code();
+        stepMetadata = jobMetadata.getStep(code);
+        jobContext.setJobStep(code);
     }
 
     @Override
@@ -149,6 +150,12 @@ public class WinderTaskContext<TI extends TaskInput, TR extends TaskResult> impl
         stepMetadata = jobMetadata.getStep(jobStep);
         if (log.isDebugEnabled()) {
             log.debug(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), stepMetadata.getName()));
+        }
+        if (stepMetadata == null) {
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Job {%s} execution status {%s} step {%s}", getJobId(), getJobStatus(), jobStep));
+            }
+            return null;
         }
         return stepMetadata.toStep();
     }
