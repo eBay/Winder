@@ -20,6 +20,9 @@ Winder can help you define the steps and let them work automatically.
 You have some batch tasks, they should be executed every day. 
 Winder can get this done easily.
 
+# Plan
+  Refine the code to use femto-coin to manage its components
+ 
 # Production use cases
 
 Production Use Cases: widely used in many distributed systems which eBay Cloud relies on.
